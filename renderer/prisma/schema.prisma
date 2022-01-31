@@ -11,31 +11,53 @@ datasource db {
 }
 
 model City {
-  id       Int       @id @default(autoincrement())
-  state    State     @relation(fields: [state_id], references: [id])
+  id       Int    @id @default(autoincrement())
+  state    State  @relation(fields: [state_id], references: [id])
   state_id Int
   code     Int
   name     String
 }
 
 model State {
-  id       Int       @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
   city     City[]
   gst_code Int
   name     String
 }
 
 model User {
-  id         Int        @id @default(autoincrement())
-  username   String     @db.VarChar(64)
-  first_name String     @db.VarChar(32)
-  last_name  String     @db.VarChar(32)
+  id         Int      @id @default(autoincrement())
+  username   String   @db.VarChar(64)
+  first_name String   @db.VarChar(32)
+  last_name  String   @db.VarChar(32)
   phone      String
-  email      String     @db.VarChar(128)
+  email      String   @db.VarChar(128)
   code       String
   type       String
   password   String
-  updated_at DateTime   @updatedAt
+  updated_at DateTime @updatedAt
+
+  @@unique([email])
+}
+
+model Supplier {
+  id                  Int      @id @default(autoincrement())
+  address             Json
+  name                String
+  phone               String
+  email               String
+  fax_number          String
+  pincode             String
+  primary_name        String
+  primary_designation String
+  primary_phone       String
+  primary_email       String
+  cst_no              String
+  ecc_no              String
+  tin_number          String
+  gst_number          String
+  pan_number          String
+  updated_at          DateTime @updatedAt
 
   @@unique([email])
 }
