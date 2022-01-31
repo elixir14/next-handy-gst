@@ -3,7 +3,7 @@ import Router from "next/router";
 
 export default function _error() {
   React.useEffect(() => {
-    Router.push("/company");
+    Router.push("/admin/dashboard");
   });
 
   return <div />;

@@ -16,6 +16,7 @@ import router from "next/router";
 import axios from "axios";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
+import { hashPassword } from "lib/auth";
 
 const styles = {
   cardCategoryWhite: {
@@ -86,8 +87,10 @@ const Register = () => {
     data.app_type = "Desktop";
     data.licence = "";
     delete data.confirmPassword;
+    const hashedPassword = await hashPassword(data.password);
+    const payload = { ...data, password: hashedPassword };
     axios
-      .post("api/auth/signup", data)
+      .post("/api/user/add", payload)
       .then(() => {
         signIn("credentials", {
           redirect: false,

@@ -306,7 +306,10 @@ const CompanyForm = ({ company, cities, states, handleFormSave }) => {
             <Button color="primary" onClick={handleSubmit(handleFormSave)}>
               {isEdit ? "Update" : "Register"}
             </Button>
-            <Button color="primary" onClick={() => router.push("/company")}>
+            <Button
+              color="primary"
+              onClick={() => router.push("/admin/dashboard")}
+            >
               Cancel
             </Button>
           </CardFooter>
