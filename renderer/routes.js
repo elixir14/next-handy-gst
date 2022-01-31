@@ -19,13 +19,9 @@
 import { BubbleChart, LibraryBooks } from "@material-ui/icons";
 import BusinessIcon from "@material-ui/icons/Business";
 import Dashboard from "@material-ui/icons/Dashboard";
+import GroupIcon from "@material-ui/icons/Group";
 
 const dashboardRoutes = [
-  {
-    path: "/company",
-    name: "Company",
-    icon: BusinessIcon,
-  },
   {
     path: "/admin/dashboard",
     name: "Dashboard",
@@ -45,6 +41,11 @@ const dashboardRoutes = [
     path: "/admin/icons",
     name: "Icons",
     icon: BubbleChart,
+  },
+  {
+    path: "/user",
+    name: "Users",
+    icon: GroupIcon,
   },
 ];
 

@@ -8,21 +8,20 @@ import CardBody from "components/Card/CardBody.js";
 import Table from "components/Table/Table";
 import router from "next/router";
 
-const CompanyList = () => {
+const index = ({ users }) => {
+  const userList = JSON.parse(users);
   const headerData = [
     "Name",
-    "Gst Number",
-    "City",
-    "Phone",
+    "Username",
     "Email",
-    "PAN Number",
-    "Notes",
-    "status",
+    "Contact no.",
+    "User type",
+    "Action",
   ];
 
   const rawClick = (key) => {
     setObj(data[key]);
-    history.push(`${url}/editcompany`);
+    history.push(`${url}/edit`);
   };
 
   const deleteEntry = (key) => {
@@ -38,12 +37,8 @@ const CompanyList = () => {
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardBody>
-            <Button
-              color="primary"
-              onClick={() => router.push(`company/register`)}
-              style={{ backgroundColor: "#0062ad" }}
-            >
-              Add Company
+            <Button color="primary" onClick={() => router.push(`/user/add`)}>
+              Add User
             </Button>
             <Table
               tableHeaderColor="primary"
@@ -59,7 +54,16 @@ const CompanyList = () => {
   );
 };
 
-CompanyList.layout = Admin;
-CompanyList.auth = true;
+index.layout = Admin;
+index.auth = true;
 
-export default CompanyList;
+export default index;
+
+export const getServerSideProps = async () => {
+  const users = await prisma.user.findMany();
+  return {
+    props: {
+      users: JSON.stringify(users),
+    },
+  };
+};
