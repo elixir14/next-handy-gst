@@ -17,38 +17,34 @@
 */
 // @material-ui/icons
 import { BubbleChart, LibraryBooks } from "@material-ui/icons";
+import BusinessIcon from "@material-ui/icons/Business";
 import Dashboard from "@material-ui/icons/Dashboard";
 
 const dashboardRoutes = [
   {
     path: "/company",
     name: "Company",
-    icon: Dashboard,
-    layout: "/admin",
+    icon: BusinessIcon,
   },
   {
-    path: "/dashboard",
+    path: "/admin/dashboard",
     name: "Dashboard",
     icon: Dashboard,
-    layout: "/admin",
   },
   {
-    path: "/table-list",
+    path: "/admin/table-list",
     name: "Table List",
     icon: "content_paste",
-    layout: "/admin",
   },
   {
-    path: "/typography",
+    path: "/admin/typography",
     name: "Typography",
     icon: LibraryBooks,
-    layout: "/admin",
   },
   {
-    path: "/icons",
+    path: "/admin/icons",
     name: "Icons",
     icon: BubbleChart,
-    layout: "/admin",
   },
 ];
 
