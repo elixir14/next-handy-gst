@@ -47,6 +47,11 @@ const dashboardRoutes = [
     name: "Users",
     icon: GroupIcon,
   },
+  {
+    path: "/supplier",
+    name: "Supplier",
+    icon: GroupIcon,
+  },
 ];
 
 export default dashboardRoutes;
