@@ -31,9 +31,7 @@ export default function Admin({ children, ...rest }) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const getRoute = () => {
-    return router.pathname !== "/admin/maps";
-  };
+
   const resizeFunction = () => {
     if (window.innerWidth >= 960) {
       setMobileOpen(false);
@@ -74,14 +72,9 @@ export default function Admin({ children, ...rest }) {
           handleDrawerToggle={handleDrawerToggle}
           {...rest}
         />
-        {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-        {getRoute() ? (
-          <div className={classes.content}>
-            <div className={classes.container}>{children}</div>
-          </div>
-        ) : (
-          <div className={classes.map}>{children}</div>
-        )}
+        <div className={classes.content}>
+          <div className={classes.container}>{children}</div>
+        </div>
       </div>
     </div>
   );
