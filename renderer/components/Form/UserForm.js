@@ -55,9 +55,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 const UserForm = ({ user, handleFormSave, onError }) => {
-  const { control, handleSubmit, watch, setValue } = useForm({
-    defaultValues: {},
-  });
+  const { control, handleSubmit, watch, setValue } = useForm();
 
   const isEdit = !!user;
 
@@ -192,36 +190,40 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   }}
                 />
               </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
-                <PasswordInput
-                  labelText="Password"
-                  defaultValue={user?.password || ""}
-                  id="password"
-                  name="password"
-                  control={control}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
-                  rules={{
-                    required: "Password is required",
-                  }}
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
-                <PasswordInput
-                  labelText="Confirm password"
-                  defaultValue={user?.confirm_password || ""}
-                  id="confirm_password"
-                  name="confirm_password"
-                  control={control}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
-                  rules={{
-                    required: "Confirm Password is required",
-                  }}
-                />
-              </GridItem>
+              {!isEdit && (
+                <>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <PasswordInput
+                      labelText="Password"
+                      defaultValue={user?.password || ""}
+                      id="password"
+                      name="password"
+                      control={control}
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                      rules={{
+                        required: "Password is required",
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <PasswordInput
+                      labelText="Confirm password"
+                      defaultValue={user?.confirm_password || ""}
+                      id="confirm_password"
+                      name="confirm_password"
+                      control={control}
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                      rules={{
+                        required: "Confirm Password is required",
+                      }}
+                    />
+                  </GridItem>
+                </>
+              )}
             </GridContainer>
           </CardBody>
           <CardFooter plain>

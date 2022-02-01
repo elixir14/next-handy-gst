@@ -7,29 +7,39 @@ import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import Table from "components/Table/Table";
 import router from "next/router";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const index = ({ users }) => {
   const userList = JSON.parse(users);
+
   const headerData = [
-    "Name",
-    "Username",
-    "Email",
-    "Contact no.",
-    "User type",
-    "Action",
+    { id: "id", name: "Id" },
+    { id: "name", name: "Name", keys: ["first_name", "last_name"] },
+    { id: "username", name: "Username" },
+    { id: "email", name: "Email" },
+    { id: "phone", name: "Contact no." },
+    { id: "type", name: "User type" },
+    { id: "action", name: "Action" },
   ];
 
-  const rawClick = (key) => {
-    setObj(data[key]);
-    history.push(`${url}/edit`);
+  const rawClick = (id) => {
+    router.push(`/user/${id}`);
   };
 
-  const deleteEntry = (key) => {
-    deleteCompany(data[key].id)
+  const deleteEntry = (id) => {
+    axios
+      .delete(`/api/user/delete/${id}`)
       .then((res) => {
-        refetch();
+        toast.success("User deleted successfully");
+        router.push("/user");
       })
-      .catch(() => refetch());
+      .catch((error) => {
+        console.log(
+          "🚀 ~ file: index.js ~ line 36 ~ deleteEntry ~ error",
+          error
+        );
+      });
   };
 
   return (
@@ -43,7 +53,7 @@ const index = ({ users }) => {
             <Table
               tableHeaderColor="primary"
               tableHead={headerData}
-              tableData={[]}
+              tableData={userList}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
             />
@@ -60,7 +70,13 @@ index.auth = true;
 export default index;
 
 export const getServerSideProps = async () => {
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    orderBy: [
+      {
+        updated_at: "desc",
+      },
+    ],
+  });
   return {
     props: {
       users: JSON.stringify(users),
