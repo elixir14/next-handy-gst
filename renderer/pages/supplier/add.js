@@ -25,7 +25,7 @@ const create = () => {
     axios
       .post("/api/supplier/add", payload)
       .then((res) => {
-        toast.success("User created successfully");
+        toast.success("Supplier created successfully");
         router.push("/supplier");
       })
       .catch((error) => {

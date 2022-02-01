@@ -4,7 +4,7 @@ import prisma from "lib/prisma";
 export default async function handler(req, res) {
   const { model, id } = req.query;
   try {
-    await prisma[model].delete({
+    await prisma[model.replace(/-/g, "_")].delete({
       where: {
         id: parseInt(id),
       },

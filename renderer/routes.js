@@ -28,21 +28,6 @@ const dashboardRoutes = [
     icon: Dashboard,
   },
   {
-    path: "/admin/table-list",
-    name: "Table List",
-    icon: "content_paste",
-  },
-  {
-    path: "/admin/typography",
-    name: "Typography",
-    icon: LibraryBooks,
-  },
-  {
-    path: "/admin/icons",
-    name: "Icons",
-    icon: BubbleChart,
-  },
-  {
     path: "/user",
     name: "Users",
     icon: GroupIcon,
@@ -63,32 +48,32 @@ const dashboardRoutes = [
         icon: GroupIcon,
       },
       {
-        path: "/item-groups",
+        path: "/group",
         name: "Item groups",
         icon: GroupIcon,
       },
       {
-        path: "/items",
+        path: "/item",
         name: "Items",
         icon: GroupIcon,
       },
       {
-        path: "/transports",
+        path: "/transport",
         name: "Transports",
         icon: GroupIcon,
       },
       {
-        path: "/units",
+        path: "/unit",
         name: "Units",
         icon: GroupIcon,
       },
       {
-        path: "/cities",
+        path: "/city",
         name: "Cities",
         icon: GroupIcon,
       },
       {
-        path: "/states",
+        path: "/state",
         name: "States",
         icon: GroupIcon,
       },

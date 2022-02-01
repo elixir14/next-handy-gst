@@ -1,35 +1,22 @@
 import React from "react";
 import router from "next/router";
-import SupplierForm from "components/Form/SupplierForm";
+import ProcessForm from "components/Form/ProcessForm";
 import Admin from "layouts/Admin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
 
 const edit = (props) => {
-  const supplier = JSON.parse(props.supplier);
+  const process = JSON.parse(props.process);
   const { setError } = useForm();
 
   const handleFormEdit = (data) => {
-    const payload = {
-      ...data,
-      cst_no: "",
-      ecc_no: "",
-      address: {
-        address1: data.address1,
-        address2: data.address2,
-        landmark: data.landmark,
-      },
-    };
-
-    delete payload.address1;
-    delete payload.address2;
-    delete payload.landmark;
+    const payload = data;
     axios
-      .post(`/api/supplier/edit/${supplier.id}`, payload)
+      .post(`/api/process/edit/${process.id}`, payload)
       .then((res) => {
-        toast.success("Supplier edited successfully");
-        router.push("/supplier");
+        toast.success("Process edited successfully");
+        router.push("/master/process");
       })
       .catch((error) => {
         setError(error.response.data.key, {
@@ -39,7 +26,7 @@ const edit = (props) => {
       });
   };
 
-  return <SupplierForm supplier={supplier} handleFormSave={handleFormEdit} />;
+  return <ProcessForm process={process} handleFormSave={handleFormEdit} />;
 };
 
 edit.layout = Admin;
@@ -50,7 +37,7 @@ export default edit;
 export async function getServerSideProps({ params }) {
   const editId = params.edit;
 
-  const supplier = await prisma.supplier.findUnique({
+  const process = await prisma.process.findUnique({
     where: {
       id: parseInt(editId),
     },
@@ -58,7 +45,7 @@ export async function getServerSideProps({ params }) {
 
   return {
     props: {
-      supplier: JSON.stringify(supplier),
+      process: JSON.stringify(process),
     },
   };
 }
