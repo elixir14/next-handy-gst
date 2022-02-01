@@ -52,6 +52,48 @@ const dashboardRoutes = [
     name: "Supplier",
     icon: GroupIcon,
   },
+  {
+    path: "/master",
+    name: "Masters",
+    icon: GroupIcon,
+    children: [
+      {
+        path: "/process",
+        name: "Process",
+        icon: GroupIcon,
+      },
+      {
+        path: "/item-groups",
+        name: "Item groups",
+        icon: GroupIcon,
+      },
+      {
+        path: "/items",
+        name: "Items",
+        icon: GroupIcon,
+      },
+      {
+        path: "/transports",
+        name: "Transports",
+        icon: GroupIcon,
+      },
+      {
+        path: "/units",
+        name: "Units",
+        icon: GroupIcon,
+      },
+      {
+        path: "/cities",
+        name: "Cities",
+        icon: GroupIcon,
+      },
+      {
+        path: "/states",
+        name: "States",
+        icon: GroupIcon,
+      },
+    ],
+  },
 ];
 
 export default dashboardRoutes;

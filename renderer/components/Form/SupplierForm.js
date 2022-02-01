@@ -287,7 +287,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
             </GridContainer>
           </CardBody>
           <CardFooter plain>
-            <Button color="rose" onClick={() => router.push("/user")}>
+            <Button color="rose" onClick={() => router.push("/supplier")}>
               Cancel
             </Button>
             <Button

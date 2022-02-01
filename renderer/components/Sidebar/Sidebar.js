@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Icon from "@material-ui/core/Icon";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 // core components
 import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.js";
 
@@ -23,63 +24,107 @@ export default function Sidebar(props) {
   // creates styles for this component
   const useStyles = makeStyles(styles);
   const classes = useStyles();
+  const [isShow, setIsShow] = useState(false);
   // verifies if routeName is the one active (in browser input)
   function activeRoute(routeName) {
     return router.route.indexOf(routeName) > -1 ? true : false;
   }
   const { color, logo, logoText, routes } = props;
-  var links = (
-    <List className={classes.list}>
-      {routes.map((prop, key) => {
-        var activePro = " ";
-        var listItemClasses;
-        if (prop.path === "/upgrade-to-pro") {
-          activePro = classes.activePro + " ";
-          listItemClasses = classNames({
-            [" " + classes[color]]: true,
-          });
-        } else {
-          listItemClasses = classNames({
-            [" " + classes[color]]: activeRoute(prop.path),
-          });
-        }
-        const whiteFontClasses = classNames({
-          [" " + classes.whiteFont]:
-            activeRoute(prop.path) || prop.path === "/upgrade-to-pro",
-        });
-        return (
-          <Link href={prop.path} key={key}>
-            <a className={activePro + classes.item}>
-              <ListItem button className={classes.itemLink + listItemClasses}>
-                {typeof prop.icon === "string" ? (
-                  <Icon
-                    className={classNames(classes.itemIcon, whiteFontClasses, {
-                      [classes.itemIconRTL]: props.rtlActive,
-                    })}
-                  >
-                    {prop.icon}
-                  </Icon>
-                ) : (
-                  <prop.icon
-                    className={classNames(classes.itemIcon, whiteFontClasses, {
-                      [classes.itemIconRTL]: props.rtlActive,
-                    })}
-                  />
-                )}
-                <ListItemText
-                  primary={props.rtlActive ? prop.rtlName : prop.name}
-                  className={classNames(classes.itemText, whiteFontClasses, {
-                    [classes.itemTextRTL]: props.rtlActive,
-                  })}
-                  disableTypography={true}
-                />
-              </ListItem>
+
+  const Item = ({ route, key, child }) => {
+    let activePro = " ";
+    let listItemClasses;
+    if (route.path === "/upgrade-to-pro") {
+      activePro = classes.activePro + " ";
+      listItemClasses = classNames({
+        [" " + classes[color]]: true,
+      });
+    } else {
+      listItemClasses = classNames({
+        [" " + classes[color]]: activeRoute(route.path),
+      });
+    }
+    const whiteFontClasses = classNames({
+      [" " + classes.whiteFont]:
+        activeRoute(route.path) || route.path === "/upgrade-to-pro",
+    });
+
+    const InnerItem = () => (
+      <ListItem button className={classes.itemLink + listItemClasses}>
+        {typeof route.icon === "string" ? (
+          <Icon
+            className={classNames(classes.itemIcon, whiteFontClasses, {
+              [classes.itemIconRTL]: props.rtlActive,
+            })}
+          >
+            {route.icon}
+          </Icon>
+        ) : (
+          <route.icon
+            className={classNames(classes.itemIcon, whiteFontClasses, {
+              [classes.itemIconRTL]: props.rtlActive,
+            })}
+          />
+        )}
+        {Array.isArray(route?.children) && (
+          <ArrowDropDownIcon
+            style={{
+              marginLeft: "auto",
+              color: "black",
+              position: "absolute",
+              right: 20,
+              top: "13px",
+            }}
+          />
+        )}
+        <ListItemText
+          primary={props.rtlActive ? route.rtlName : route.name}
+          className={classNames(classes.itemText, whiteFontClasses, {
+            [classes.itemTextRTL]: props.rtlActive,
+          })}
+          disableTypography={true}
+        />
+      </ListItem>
+    );
+
+    return (
+      <>
+        {Array.isArray(route?.children) ? (
+          <div
+            className={activePro + classes.item}
+            onClick={() => setIsShow(!isShow)}
+          >
+            <InnerItem />
+          </div>
+        ) : (
+          <Link href={route.path} key={key}>
+            <a
+              className={activePro + classes.item}
+              style={{ paddingLeft: child && "1rem" }}
+            >
+              <InnerItem />
             </a>
           </Link>
-        );
-      })}
+        )}
+      </>
+    );
+  };
+
+  const links = (
+    <List className={classes.list}>
+      {routes.map((route, key) => (
+        <div key={key}>
+          <Item route={route} key={`parent-${key}`} />
+          {Array.isArray(route?.children) &&
+            isShow &&
+            route.children.map((child, childKey) => (
+              <Item route={child} key={`child-${childKey}`} child={true} />
+            ))}
+        </div>
+      ))}
     </List>
   );
+
   var brand = (
     <div className={classes.logo}>
       <a
