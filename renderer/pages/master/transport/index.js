@@ -1,5 +1,5 @@
 import React from "react";
-import Admin from "../../layouts/Admin";
+import Admin from "layouts/Admin";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Button from "components/CustomButtons/Button.js";
@@ -10,31 +10,28 @@ import router from "next/router";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const index = ({ suppliers }) => {
-  const supplierList = JSON.parse(suppliers);
+const index = ({ transports }) => {
+  const transportList = JSON.parse(transports);
 
   const headerData = [
     { id: "id", name: "Id" },
     { id: "name", name: "Name" },
-    { id: "gst_number", name: "Gst Number" },
-    { id: "phone", name: "Phone Number" },
-    { id: "email", name: "Email" },
-    { id: "fax_number", name: "Fax Number" },
-    { id: "primary_name", name: "Primary Name" },
-    { id: "primary_phone", name: "Primary Contact" },
+    { id: "vehicle", name: "Vehicle" },
+    { id: "vehicle_number", name: "Vehicle number" },
+    { id: "contact_number", name: "Contact No." },
     { id: "action", name: "Action" },
   ];
 
   const rawClick = (id) => {
-    router.push(`/supplier/${id}`);
+    router.push(`/master/transport/${id}`);
   };
 
   const deleteEntry = (id) => {
     axios
-      .delete(`/api/supplier/delete/${id}`)
+      .delete(`/api/transport/delete/${id}`)
       .then((res) => {
-        toast.success("Supplier deleted successfully");
-        router.push("/supplier");
+        toast.success("Transport deleted successfully");
+        router.push("/master/transport");
       })
       .catch((error) => {
         console.log(
@@ -51,14 +48,14 @@ const index = ({ suppliers }) => {
           <CardBody>
             <Button
               color="primary"
-              onClick={() => router.push(`/supplier/add`)}
+              onClick={() => router.push(`/master/transport/add`)}
             >
-              Add User
+              Add Transport
             </Button>
             <Table
               tableHeaderColor="primary"
               tableHead={headerData}
-              tableData={supplierList}
+              tableData={transportList}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
             />
@@ -75,7 +72,7 @@ index.auth = true;
 export default index;
 
 export const getServerSideProps = async () => {
-  const suppliers = await prisma.supplier.findMany({
+  const transports = await prisma.transport.findMany({
     orderBy: [
       {
         updated_at: "desc",
@@ -84,7 +81,7 @@ export const getServerSideProps = async () => {
   });
   return {
     props: {
-      suppliers: JSON.stringify(suppliers),
+      transports: JSON.stringify(transports),
     },
   };
 };

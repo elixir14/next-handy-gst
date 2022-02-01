@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   const payload = req.body;
   const { model, id } = req.query;
   try {
-    await prisma[model].update({
+    await prisma[model.replace(/-/g, "_")].update({
       where: {
         id: parseInt(id),
       },

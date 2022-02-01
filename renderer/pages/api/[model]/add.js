@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   const payload = req.body;
   const { model } = req.query;
   try {
-    await prisma[model].create({
+    await prisma[model.replace(/-/g, "_")].create({
       data: payload,
     });
     res.status(200);
