@@ -31,7 +31,7 @@ export default function Sidebar(props) {
   }
   const { color, logo, logoText, routes } = props;
 
-  const Item = ({ route, key, child }) => {
+  const Item = ({ route, child, concatPath }) => {
     let activePro = " ";
     let listItemClasses;
     if (route.path === "/upgrade-to-pro") {
@@ -97,7 +97,7 @@ export default function Sidebar(props) {
             <InnerItem />
           </div>
         ) : (
-          <Link href={route.path} key={key}>
+          <Link href={`${concatPath ?? ""}${route.path}`}>
             <a
               className={activePro + classes.item}
               style={{ paddingLeft: child && "1rem" }}
@@ -113,12 +113,14 @@ export default function Sidebar(props) {
   const links = (
     <List className={classes.list}>
       {routes.map((route, key) => (
-        <div key={key}>
-          <Item route={route} key={`parent-${key}`} />
+        <div key={`parent-${key}`}>
+          <Item route={route} />
           {Array.isArray(route?.children) &&
             isShow &&
             route.children.map((child, childKey) => (
-              <Item route={child} key={`child-${childKey}`} child={true} />
+              <div key={`child-${childKey}`}>
+                <Item route={child} child={true} concatPath={route.path} />
+              </div>
             ))}
         </div>
       ))}
