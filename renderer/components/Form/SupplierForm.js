@@ -52,12 +52,12 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-const UserForm = ({ user, handleFormSave, onError }) => {
+const SupplierForm = ({ supplier, handleFormSave }) => {
   const { control, handleSubmit } = useForm({
     defaultValues: {},
   });
 
-  const isEdit = !!user;
+  const isEdit = !!supplier;
 
   const classes = useStyles();
 
@@ -75,7 +75,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
                   labelText="Name"
-                  defaultValue={user?.name || ""}
+                  defaultValue={supplier?.name || ""}
                   id="name"
                   name="name"
                   control={control}
@@ -89,7 +89,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="Email"
                   id="email"
                   name="email"
-                  defaultValue={user?.email || ""}
+                  defaultValue={supplier?.email || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -111,7 +111,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   id="phone"
                   name="phone"
                   isDisable={isEdit}
-                  defaultValue={user?.phone || ""}
+                  defaultValue={supplier?.phone || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -125,7 +125,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="Fax number"
                   id="fax_number"
                   name="fax_number"
-                  defaultValue={user?.fax_number || ""}
+                  defaultValue={supplier?.fax_number || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -138,7 +138,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="Address1"
                   id="address1"
                   name="address1"
-                  defaultValue={user?.address1 || ""}
+                  defaultValue={supplier?.address?.address1 || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -151,7 +151,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="Address2"
                   id="address2"
                   name="address2"
-                  defaultValue={user?.address2 || ""}
+                  defaultValue={supplier?.address?.address2 || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -164,7 +164,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="Landmark"
                   id="landmark"
                   name="landmark"
-                  defaultValue={user?.landmark || ""}
+                  defaultValue={supplier?.address?.landmark || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -177,7 +177,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="Pincode"
                   id="pincode"
                   name="pincode"
-                  defaultValue={user?.pincode || ""}
+                  defaultValue={supplier?.pincode || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -190,7 +190,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="Primary name"
                   id="primary_name"
                   name="primary_name"
-                  defaultValue={user?.primary_name || ""}
+                  defaultValue={supplier?.primary_name || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -203,7 +203,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="Primary designation"
                   id="primary_designation"
                   name="primary_designation"
-                  defaultValue={user?.primary_designation || ""}
+                  defaultValue={supplier?.primary_designation || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -216,7 +216,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="Primary phone"
                   id="primary_phone"
                   name="primary_phone"
-                  defaultValue={user?.primary_phone || ""}
+                  defaultValue={supplier?.primary_phone || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -229,7 +229,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="Primary email"
                   id="primary_email"
                   name="primary_email"
-                  defaultValue={user?.primary_email || ""}
+                  defaultValue={supplier?.primary_email || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -250,7 +250,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="GST number"
                   id="gst_number"
                   name="gst_number"
-                  defaultValue={user?.gst_number || ""}
+                  defaultValue={supplier?.gst_number || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -263,7 +263,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="TAN"
                   id="tin_number"
                   name="tin_number"
-                  defaultValue={user?.tin_number || ""}
+                  defaultValue={supplier?.tin_number || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -276,7 +276,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   labelText="PAN"
                   id="pan_number"
                   name="pan_number"
-                  defaultValue={user?.pan_number || ""}
+                  defaultValue={supplier?.pan_number || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -290,10 +290,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
             <Button color="rose" onClick={() => router.push("/supplier")}>
               Cancel
             </Button>
-            <Button
-              color="primary"
-              onClick={handleSubmit(handleFormSave, onError)}
-            >
+            <Button color="primary" onClick={handleSubmit(handleFormSave)}>
               {isEdit ? "Update" : "Add"}
             </Button>
           </CardFooter>
@@ -303,4 +300,4 @@ const UserForm = ({ user, handleFormSave, onError }) => {
   );
 };
 
-export default UserForm;
+export default SupplierForm;
