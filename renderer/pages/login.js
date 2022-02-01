@@ -159,16 +159,6 @@ const Login = () => {
             </Button>
           </CardFooter>
         </Card>
-
-        <div className={classes.signUpCont}>
-          Don't Have an account?{" "}
-          <p
-            className={classes.textBold}
-            onClick={() => router.push("/register")}
-          >
-            Get Started
-          </p>
-        </div>
       </GridItem>
     </div>
   );
