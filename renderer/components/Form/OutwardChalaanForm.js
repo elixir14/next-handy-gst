@@ -53,12 +53,12 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
+const OutwardChalaanForm = ({ process, handleFormSave }) => {
   const { control, handleSubmit } = useForm({
     defaultValues: {},
   });
 
-  const isEdit = !!item;
+  const isEdit = !!process;
 
   const classes = useStyles();
 
@@ -68,7 +68,7 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
         <Card>
           <CardHeader color="primary">
             <h4 className={classes.cardTitleWhite}>
-              {isEdit ? "Edit Item" : "Add Item"}
+              {isEdit ? "Edit Process" : "Add Process"}
             </h4>
           </CardHeader>
           <CardBody>
@@ -76,7 +76,7 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
                   labelText="Name"
-                  defaultValue={item?.name || ""}
+                  defaultValue={process?.name || ""}
                   id="name"
                   name="name"
                   control={control}
@@ -87,11 +87,11 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
-                  labelText="Tarrif ClassificationCode"
-                  id="classification_code"
-                  name="classification_code"
+                  labelText="Duration"
+                  id="duration"
+                  name="duration"
                   isDisable={isEdit}
-                  defaultValue={item?.classification_code || ""}
+                  defaultValue={process?.duration || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -101,11 +101,11 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
-                  labelText="Code"
-                  id="code"
-                  name="code"
+                  labelText="Inward day"
+                  id="min_inward_days"
+                  name="min_inward_days"
                   isDisable={isEdit}
-                  defaultValue={item?.code || ""}
+                  defaultValue={process?.min_inward_days || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -115,63 +115,11 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
               </GridItem>
 
               <GridItem xs={12} sm={12} md={6}>
-                <CustomInput
-                  labelText="Drawing Code"
-                  id="drawing_code"
-                  name="drawing_code"
-                  isDisable={isEdit}
-                  defaultValue={item?.drawing_code || ""}
-                  control={control}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
-                  control={control}
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
-                <CustomDropDown
-                  control={control}
-                  labelText="Groups"
-                  name="group_id"
-                  defaultValue={item?.group_id || ""}
-                  optionData={groupList}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
-                <CustomDropDown
-                  control={control}
-                  labelText="Unit"
-                  name="unit_id"
-                  defaultValue={item?.unit_id || ""}
-                  optionData={unitList}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
-                <CustomInput
-                  labelText="Drawing File"
-                  id="drawing_file"
-                  name="drawing_file"
-                  isDisable={isEdit}
-                  defaultValue={item?.drawing_file || ""}
-                  control={control}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
-                  control={control}
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
                 <CustomDropDown
                   control={control}
                   labelText="Status"
                   name="status"
-                  defaultValue={item?.status || ""}
+                  defaultValue={process?.status || ""}
                   optionData={[
                     { id: "pending", name: "Pending" },
                     { id: "in_process", name: "In Process" },
@@ -183,24 +131,10 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
                   }}
                 />
               </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
-                <CustomInput
-                  labelText="Description"
-                  id="description"
-                  name="description"
-                  isDisable={isEdit}
-                  defaultValue={item?.description || ""}
-                  control={control}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
-                  control={control}
-                />
-              </GridItem>
             </GridContainer>
           </CardBody>
           <CardFooter plain>
-            <Button color="rose" onClick={() => router.push("/master/item")}>
+            <Button color="rose" onClick={() => router.push("/master/process")}>
               Cancel
             </Button>
             <Button color="primary" onClick={handleSubmit(handleFormSave)}>
@@ -213,4 +147,4 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
   );
 };
 
-export default ItemForm;
+export default OutwardChalaanForm;

@@ -53,12 +53,12 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
+const StateForm = ({ state, handleFormSave }) => {
   const { control, handleSubmit } = useForm({
     defaultValues: {},
   });
 
-  const isEdit = !!item;
+  const isEdit = !!state;
 
   const classes = useStyles();
 
@@ -68,7 +68,7 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
         <Card>
           <CardHeader color="primary">
             <h4 className={classes.cardTitleWhite}>
-              {isEdit ? "Edit Item" : "Add Item"}
+              {isEdit ? "Edit State" : "Add State"}
             </h4>
           </CardHeader>
           <CardBody>
@@ -76,22 +76,10 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
                   labelText="Name"
-                  defaultValue={item?.name || ""}
                   id="name"
                   name="name"
-                  control={control}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
-                <CustomInput
-                  labelText="Tarrif ClassificationCode"
-                  id="classification_code"
-                  name="classification_code"
                   isDisable={isEdit}
-                  defaultValue={item?.classification_code || ""}
+                  defaultValue={state?.name || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -101,95 +89,39 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
-                  labelText="Code"
-                  id="code"
-                  name="code"
+                  labelText="Abbreviation"
+                  id="abbreviation"
+                  name="abbreviation"
                   isDisable={isEdit}
-                  defaultValue={item?.code || ""}
+                  defaultValue={state?.abbreviation || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
                   }}
                   control={control}
-                />
-              </GridItem>
-
-              <GridItem xs={12} sm={12} md={6}>
-                <CustomInput
-                  labelText="Drawing Code"
-                  id="drawing_code"
-                  name="drawing_code"
-                  isDisable={isEdit}
-                  defaultValue={item?.drawing_code || ""}
-                  control={control}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
-                  control={control}
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
-                <CustomDropDown
-                  control={control}
-                  labelText="Groups"
-                  name="group_id"
-                  defaultValue={item?.group_id || ""}
-                  optionData={groupList}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
-                <CustomDropDown
-                  control={control}
-                  labelText="Unit"
-                  name="unit_id"
-                  defaultValue={item?.unit_id || ""}
-                  optionData={unitList}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
-                  labelText="Drawing File"
-                  id="drawing_file"
-                  name="drawing_file"
+                  labelText="GST Code"
+                  id="gst_code"
+                  name="gst_code"
                   isDisable={isEdit}
-                  defaultValue={item?.drawing_file || ""}
+                  defaultValue={state?.gst_code || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
                   }}
                   control={control}
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
-                <CustomDropDown
-                  control={control}
-                  labelText="Status"
-                  name="status"
-                  defaultValue={item?.status || ""}
-                  optionData={[
-                    { id: "pending", name: "Pending" },
-                    { id: "in_process", name: "In Process" },
-                    { id: "approved", name: "Approved" },
-                    { id: "completed", name: "Completed" },
-                  ]}
-                  formControlProps={{
-                    fullWidth: true,
-                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
-                  labelText="Description"
-                  id="description"
-                  name="description"
+                  labelText="Priority"
+                  id="priority"
+                  name="priority"
                   isDisable={isEdit}
-                  defaultValue={item?.description || ""}
+                  defaultValue={state?.priority || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -200,7 +132,7 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
             </GridContainer>
           </CardBody>
           <CardFooter plain>
-            <Button color="rose" onClick={() => router.push("/master/item")}>
+            <Button color="rose" onClick={() => router.push("/master/state")}>
               Cancel
             </Button>
             <Button color="primary" onClick={handleSubmit(handleFormSave)}>
@@ -213,4 +145,4 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
   );
 };
 
-export default ItemForm;
+export default StateForm;
