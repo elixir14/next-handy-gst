@@ -11,18 +11,21 @@ datasource db {
 }
 
 model City {
-  id       Int    @id @default(autoincrement())
-  state    State  @relation(fields: [state_id], references: [id])
-  state_id Int
-  code     Int
-  name     String
+  id         Int      @id @default(autoincrement())
+  state      State    @relation(fields: [state_id], references: [id])
+  state_id   Int
+  name       String
+  updated_at DateTime @updatedAt
 }
 
 model State {
-  id       Int    @id @default(autoincrement())
-  city     City[]
-  gst_code Int
-  name     String
+  id            Int      @id @default(autoincrement())
+  city          City[]
+  gst_code      String
+  abbreviation  String
+  priority      String
+  name          String
+  updated_at    DateTime @updatedAt
 }
 
 model User {
@@ -78,21 +81,23 @@ model Group {
   description String
   status      String
   updated_at  DateTime @updatedAt
-  Item        Item?    @relation(fields: [itemId], references: [id])
-  itemId      Int?
+  item        Item[]
 }
 
 model Item {
-  id           Int          @id @default(autoincrement())
-  name         String
-  code         String
-  drawing_code String
-  drawing_file String
-  description  String
-  status       String
-  group        Group[]
-  unit         Unit[]
-  updated_at   DateTime     @updatedAt
+  id                  Int      @id @default(autoincrement())
+  name                String
+  code                String
+  classification_code String
+  drawing_code        String
+  drawing_file        String
+  description         String
+  status              String
+  updated_at          DateTime @updatedAt
+  group               Group?   @relation(fields: [group_id], references: [id])
+  group_id            Int?
+  unit                Unit?    @relation(fields: [unit_id], references: [id])
+  unit_id             Int?
 }
 
 model Transport {
@@ -110,6 +115,5 @@ model Unit {
   code       String
   status     String
   updated_at DateTime @updatedAt
-  Item       Item?    @relation(fields: [itemId], references: [id])
-  itemId     Int?
+  item       Item[]
 }
