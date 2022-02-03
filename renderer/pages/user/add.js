@@ -5,11 +5,12 @@ import Admin from "layouts/Admin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { hashPassword } from "lib/auth";
 
 const create = () => {
   const { setError } = useForm();
 
-  const handleFormSave = (data) => {
+  const handleFormSave = async (data) => {
     if (data.password !== data.confirm_password) {
       setError("confirm_password", {
         type: "required",
@@ -18,7 +19,8 @@ const create = () => {
       return;
     }
     delete data.confirm_password;
-    const payload = data;
+    const hashedPassword = await hashPassword(data.password);
+    const payload = { ...data, password: hashedPassword };
     axios
       .post("/api/user/add", payload)
       .then((res) => {
