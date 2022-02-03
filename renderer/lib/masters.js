@@ -15,3 +15,23 @@ export const itemGroups = async () => {
 export const units = async () => {
   return await prisma.unit.findMany();
 };
+
+export const processes = async () => {
+  return await prisma.process.findMany();
+};
+
+export const suppliers = async () => {
+  return await prisma.supplier.findMany();
+};
+
+export const transports = async () => {
+  return await prisma.transport.findMany();
+};
+
+export const items = async () => {
+  return await prisma.item.findMany();
+};
+
+export const outward_chalaan_item = async () => {
+  return await prisma.outward_chalaan_item.findMany();
+};

@@ -19,13 +19,13 @@ model City {
 }
 
 model State {
-  id            Int      @id @default(autoincrement())
-  city          City[]
-  gst_code      String
-  abbreviation  String
-  priority      String
-  name          String
-  updated_at    DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  city         City[]
+  gst_code     String
+  abbreviation String
+  priority     String
+  name         String
+  updated_at   DateTime @updatedAt
 }
 
 model User {
@@ -44,7 +44,7 @@ model User {
 }
 
 model Supplier {
-  id                  Int      @id @default(autoincrement())
+  id                  Int               @id @default(autoincrement())
   address             Json
   name                String
   phone               String
@@ -60,18 +60,20 @@ model Supplier {
   tin_number          String
   gst_number          String
   pan_number          String
-  updated_at          DateTime @updatedAt
+  updated_at          DateTime          @updatedAt
+  outward_chalaan     outward_chalaan[]
 
   @@unique([email])
 }
 
 model Process {
-  id              Int      @id @default(autoincrement())
+  id              Int               @id @default(autoincrement())
   name            String
   duration        String
   min_inward_days String
   status          String
-  updated_at      DateTime @updatedAt
+  updated_at      DateTime          @updatedAt
+  outward_chalaan outward_chalaan[]
 }
 
 model Group {
@@ -85,28 +87,31 @@ model Group {
 }
 
 model Item {
-  id                  Int      @id @default(autoincrement())
-  name                String
-  code                String
-  classification_code String
-  drawing_code        String
-  drawing_file        String
-  description         String
-  status              String
-  updated_at          DateTime @updatedAt
-  group               Group?   @relation(fields: [group_id], references: [id])
-  group_id            Int?
-  unit                Unit?    @relation(fields: [unit_id], references: [id])
-  unit_id             Int?
+  id                   Int                    @id @default(autoincrement())
+  name                 String
+  code                 String
+  classification_code  String
+  drawing_code         String
+  drawing_file         String
+  description          String
+  status               String
+  updated_at           DateTime               @updatedAt
+  group                Group?                 @relation(fields: [group_id], references: [id])
+  group_id             Int?
+  unit                 Unit?                  @relation(fields: [unit_id], references: [id])
+  unit_id              Int?
+  outward_chalaan      outward_chalaan[]
+  outward_chalaan_item outward_chalaan_item[]
 }
 
 model Transport {
-  id             Int      @id @default(autoincrement())
-  name           String
-  vehicle        String
-  vehicle_number String
-  contact_number String
-  updated_at     DateTime @updatedAt
+  id              Int               @id @default(autoincrement())
+  name            String
+  vehicle         String
+  vehicle_number  String
+  contact_number  String
+  updated_at      DateTime          @updatedAt
+  outward_chalaan outward_chalaan[]
 }
 
 model Unit {
@@ -116,4 +121,44 @@ model Unit {
   status     String
   updated_at DateTime @updatedAt
   item       Item[]
+}
+
+model outward_chalaan {
+  id                   Int                    @id @default(autoincrement())
+  date                 DateTime
+  number               String
+  duration             String
+  bags                 String
+  rate                 String
+  note                 String
+  updated_at           DateTime               @updatedAt
+  Supplier             Supplier?              @relation(fields: [supplier_id], references: [id])
+  supplier_id          Int?
+  Process              Process?               @relation(fields: [process_id], references: [id])
+  process_id           Int?
+  Item                 Item?                  @relation(fields: [item_id], references: [id])
+  item_id              Int?
+  Transport            Transport?             @relation(fields: [transport_id], references: [id])
+  transport_id         Int?
+  outward_chalaan_item outward_chalaan_item[]
+}
+
+model outward_chalaan_item {
+  id                 Int              @id @default(autoincrement())
+  quantity           String
+  net_weight         String
+  gross_weight       String
+  remark             String
+  updated_at         DateTime         @updatedAt
+  Item               Item?            @relation(fields: [item_id], references: [id])
+  item_id            Int?
+  outward_chalaan    outward_chalaan? @relation(fields: [outward_chalaan_id], references: [id])
+  outward_chalaan_id Int?
+}
+
+model Settings {
+  id         Int      @id @default(autoincrement())
+  key        String
+  value      String
+  updated_at DateTime @updatedAt
 }

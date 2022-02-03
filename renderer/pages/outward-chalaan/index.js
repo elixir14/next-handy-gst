@@ -9,37 +9,30 @@ import Table from "components/Table/Table";
 import router from "next/router";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { states } from "lib/masters";
 
-const index = (props) => {
-  const cityList = JSON.parse(props.cities);
-  const stateList = JSON.parse(props.stateList);
-
-  const mergeById = (a1, a2) =>
-    a1.map((itm) => ({
-      state: a2.find((item) => item.id === itm.state_id && item),
-      ...itm,
-    }));
-
-  const citiesWithState = mergeById(cityList, stateList);
+const index = ({ outwardChalaans }) => {
+  const outwardChalaanList = JSON.parse(outwardChalaans);
 
   const headerData = [
     { id: "id", name: "Id" },
-    { id: "name", name: "Name" },
-    { id: "state", name: "State", key: "name", selector: true },
+    { id: "number", name: "Number" },
+    { id: "duration", name: "Duration" },
+    { id: "bags", name: "Bags" },
+    { id: "rate", name: "Rate" },
+    { id: "date", name: "Date" },
     { id: "action", name: "Action" },
   ];
 
   const rawClick = (id) => {
-    router.push(`/master/city/${id}`);
+    router.push(`/outward-chalaan/${id}`);
   };
 
   const deleteEntry = (id) => {
     axios
-      .delete(`/api/city/delete/${id}`)
+      .delete(`/api/outward-chalaan/delete/${id}`)
       .then((res) => {
-        toast.success("City deleted successfully");
-        router.push("/master/city");
+        toast.success("Chalaan deleted successfully");
+        router.push("/outward-chalaan");
       })
       .catch((error) => {
         console.log(
@@ -56,14 +49,14 @@ const index = (props) => {
           <CardBody>
             <Button
               color="primary"
-              onClick={() => router.push(`/master/city/add`)}
+              onClick={() => router.push(`/outward-chalaan/add`)}
             >
-              Add City
+              Add Chalaan
             </Button>
             <Table
               tableHeaderColor="primary"
               tableHead={headerData}
-              tableData={citiesWithState}
+              tableData={outwardChalaanList}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
             />
@@ -80,8 +73,7 @@ index.auth = true;
 export default index;
 
 export const getServerSideProps = async () => {
-  const stateList = await states();
-  const cities = await prisma.city.findMany({
+  const outwardChalaans = await prisma.outward_chalaan.findMany({
     orderBy: [
       {
         updated_at: "desc",
@@ -90,8 +82,7 @@ export const getServerSideProps = async () => {
   });
   return {
     props: {
-      cities: JSON.stringify(cities),
-      stateList: JSON.stringify(stateList),
+      outwardChalaans: JSON.stringify(outwardChalaans),
     },
   };
 };
