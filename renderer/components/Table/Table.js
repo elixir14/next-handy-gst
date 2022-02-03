@@ -20,7 +20,7 @@ export default function CustomTable(props) {
     deleteEntry,
     isEdit = true,
     isDelete = true,
-    selectorData = [],
+    fullData = false,
   } = props;
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -34,11 +34,6 @@ export default function CustomTable(props) {
     return string;
   };
 
-  const setColumnValueById = (key, id) => {
-    const obj = selectorData.find((d) => d.id === id);
-    return obj[key];
-  };
-
   useEffect(() => {
     let intersectList = [];
     tableData.filter((item1) => {
@@ -47,10 +42,7 @@ export default function CustomTable(props) {
         if (item2.keys) {
           intersectDict[item2.id] = setColumnValue(item2.keys, item1);
         } else if (item2.selector) {
-          intersectDict[item2.id] = setColumnValueById(
-            item2.key,
-            item1[item2.id]
-          );
+          intersectDict[item2.id] = item1[item2.id][item2.key];
         } else {
           intersectDict[item2.id] = item1[item2.id];
         }
@@ -92,7 +84,9 @@ export default function CustomTable(props) {
                             <Button
                               size="sm"
                               color="info"
-                              onClick={() => rawClick(list.id)}
+                              onClick={() =>
+                                rawClick(fullData ? list : list.id)
+                              }
                             >
                               Edit
                             </Button>

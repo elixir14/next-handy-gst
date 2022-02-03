@@ -38,6 +38,11 @@ const dashboardRoutes = [
     icon: GroupIcon,
   },
   {
+    path: "/outward-chalaan",
+    name: "Outward Chalaan",
+    icon: GroupIcon,
+  },
+  {
     path: "/master",
     name: "Masters",
     icon: GroupIcon,
@@ -78,6 +83,11 @@ const dashboardRoutes = [
         icon: GroupIcon,
       },
     ],
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    icon: GroupIcon,
   },
 ];
 
