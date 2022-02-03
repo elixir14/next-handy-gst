@@ -4,6 +4,19 @@ import prisma from "lib/prisma";
 export default async function handler(req, res) {
   const payload = req.body;
   const { model } = req.query;
+
+  if (model === "user") {
+    const existingUser = await prisma[model.replace(/-/g, "_")].findUnique({
+      where: {
+        email: payload.email,
+      },
+    });
+    if (existingUser) {
+      res.status(422).json({ message: "User already exists with this email!" });
+      return;
+    }
+  }
+
   try {
     await prisma[model.replace(/-/g, "_")].create({
       data: payload,
