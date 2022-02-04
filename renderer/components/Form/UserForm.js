@@ -55,7 +55,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 const UserForm = ({ user, handleFormSave, onError }) => {
-  const { control, handleSubmit, watch, setValue } = useForm();
+  const { control, handleSubmit, watch, setValue, getValues } = useForm();
 
   const isEdit = !!user;
 
@@ -88,10 +88,6 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                     fullWidth: true,
                   }}
                   rules={{
-                    pattern: {
-                      value: /[a-zA-Z]+/,
-                      message: "Name is Invalid",
-                    },
                     required: "Name is required",
                   }}
                 />
@@ -150,8 +146,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   control={control}
                   rules={{
                     pattern: {
-                      value:
-                        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: "Email is Invalid",
                     },
                     required: "Email is required",
@@ -203,7 +198,11 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                         fullWidth: true,
                       }}
                       rules={{
-                        required: "Password is required",
+                        required: "You must specify a password",
+                        minLength: {
+                          value: 8,
+                          message: "Password must have at least 8 characters",
+                        },
                       }}
                     />
                   </GridItem>
@@ -218,7 +217,9 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                         fullWidth: true,
                       }}
                       rules={{
-                        required: "Confirm Password is required",
+                        validate: (value) =>
+                          value === getValues("password") ||
+                          "The passwords do not match",
                       }}
                     />
                   </GridItem>

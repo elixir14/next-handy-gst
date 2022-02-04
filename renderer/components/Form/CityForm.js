@@ -84,7 +84,9 @@ const CityForm = ({ city, handleFormSave, stateList }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Name is required",
+                  }}
                 />
               </GridItem>
 
@@ -97,6 +99,9 @@ const CityForm = ({ city, handleFormSave, stateList }) => {
                   optionData={stateList}
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  rules={{
+                    required: "State is required",
                   }}
                 />
               </GridItem>

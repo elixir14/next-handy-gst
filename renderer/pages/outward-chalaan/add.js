@@ -5,13 +5,7 @@ import Admin from "layouts/Admin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import {
-  items,
-  outward_chalaan_item,
-  processes,
-  suppliers,
-  transports,
-} from "lib/masters";
+import { items, processes, suppliers, transports } from "lib/masters";
 
 const create = (props) => {
   const { setError } = useForm();
@@ -53,6 +47,7 @@ create.layout = Admin;
 create.auth = true;
 
 export default create;
+
 export async function getServerSideProps() {
   const transportList = await transports();
   const supplierList = await suppliers();

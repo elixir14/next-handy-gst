@@ -83,6 +83,9 @@ const UnitForm = ({ unit, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  rules={{
+                    required: "Name is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -113,6 +116,9 @@ const UnitForm = ({ unit, handleFormSave }) => {
                   ]}
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  rules={{
+                    required: "Status is required",
                   }}
                 />
               </GridItem>

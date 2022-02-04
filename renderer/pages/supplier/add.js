@@ -4,8 +4,11 @@ import SupplierForm from "components/Form/SupplierForm";
 import Admin from "layouts/Admin";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { cities, states } from "lib/masters";
 
-const create = () => {
+const create = (props) => {
+  const cityList = JSON.parse(props.cityList);
+  const stateList = JSON.parse(props.stateList);
   const handleFormSave = (data) => {
     const payload = {
       ...data,
@@ -36,10 +39,27 @@ const create = () => {
       });
   };
 
-  return <SupplierForm handleFormSave={handleFormSave} />;
+  return (
+    <SupplierForm
+      handleFormSave={handleFormSave}
+      stateList={stateList}
+      cityList={cityList}
+    />
+  );
 };
 
 create.layout = Admin;
 create.auth = true;
 
 export default create;
+
+export async function getServerSideProps() {
+  const cityList = await cities();
+  const stateList = await states();
+  return {
+    props: {
+      cityList: JSON.stringify(cityList),
+      stateList: JSON.stringify(stateList),
+    },
+  };
+}

@@ -15,6 +15,7 @@ import Admin from "layouts/Admin";
 import { SETTINGS } from "lib/constants";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Danger from "@/components/Typography/Danger";
 
 const styles = {
   cardCategoryWhite: {
@@ -58,9 +59,10 @@ const useStyles = makeStyles(styles);
 const index = (props) => {
   const settingList = JSON.parse(props.settingList);
 
-  const { control, handleSubmit, setError } = useForm({
+  const { control, handleSubmit, setError, getValues, clearErrors } = useForm({
     defaultValues: {},
   });
+
   const mergeById = (a1, a2) =>
     a1.map((itm) => ({
       ...a2.find((item) => item.id === itm.id && item),
@@ -124,7 +126,35 @@ const index = (props) => {
                     formControlProps={{
                       fullWidth: true,
                     }}
-                    control={control}
+                    rules={{
+                      validate: (value) => {
+                        if (
+                          setting.key === "suffix" ||
+                          setting.key === "prefix"
+                        ) {
+                          const [suffix, prefix] = getValues([
+                            "suffix",
+                            "prefix",
+                          ]);
+                          if (suffix || prefix) {
+                            clearErrors(["suffix", "prefix"]);
+                            return true;
+                          } else {
+                            setError("suffix", {
+                              type: "manual",
+                              message: "Suffix is required",
+                            });
+                            setError("prefix", {
+                              type: "manual",
+                              message: "Prefix is required",
+                            });
+                          }
+                        } else if (value) {
+                          return true;
+                        }
+                        return `${setting.label} is required`;
+                      },
+                    }}
                   />
                 </GridItem>
               ))}

@@ -18,6 +18,8 @@ const index = ({ items }) => {
     { id: "name", name: "Name" },
     { id: "code", name: "Code" },
     { id: "drawing_code", name: "Drawing Code" },
+    { id: "group_id", name: "Group" },
+    { id: "unit_id", name: "Unit" },
     { id: "status", name: "Status" },
     { id: "action", name: "Action" },
   ];

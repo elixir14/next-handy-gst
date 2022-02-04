@@ -64,7 +64,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    minHeight: "calc(100vh - 123px)",
+    minHeight: "calc(100vh - 140px)",
   },
   FooterCont: {
     justifyContent: "center",
@@ -124,8 +124,7 @@ const Login = () => {
                   control={control}
                   rules={{
                     pattern: {
-                      value:
-                        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: "Email is Invalid",
                     },
                     required: "Email can not be blank",

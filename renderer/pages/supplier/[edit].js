@@ -5,9 +5,12 @@ import Admin from "layouts/Admin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { cities, states } from "lib/masters";
 
 const edit = (props) => {
   const supplier = JSON.parse(props.supplier);
+  const cityList = JSON.parse(props.cityList);
+  const stateList = JSON.parse(props.stateList);
   const { setError } = useForm();
 
   const handleFormEdit = (data) => {
@@ -39,7 +42,14 @@ const edit = (props) => {
       });
   };
 
-  return <SupplierForm supplier={supplier} handleFormSave={handleFormEdit} />;
+  return (
+    <SupplierForm
+      supplier={supplier}
+      handleFormSave={handleFormEdit}
+      stateList={stateList}
+      cityList={cityList}
+    />
+  );
 };
 
 edit.layout = Admin;
@@ -55,10 +65,13 @@ export async function getServerSideProps({ params }) {
       id: parseInt(editId),
     },
   });
-
+  const cityList = await cities();
+  const stateList = await states();
   return {
     props: {
       supplier: JSON.stringify(supplier),
+      cityList: JSON.stringify(cityList),
+      stateList: JSON.stringify(stateList),
     },
   };
 }
