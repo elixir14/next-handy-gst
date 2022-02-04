@@ -83,6 +83,9 @@ const ProcessForm = ({ process, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  rules={{
+                    required: "Name is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -96,7 +99,6 @@ const ProcessForm = ({ process, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -105,12 +107,11 @@ const ProcessForm = ({ process, handleFormSave }) => {
                   id="min_inward_days"
                   name="min_inward_days"
                   isDisable={isEdit}
-                  defaultValue={process?.min_inward_days || ""}
+                  defaultValue={parseInt(process?.min_inward_days) || 2}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                 />
               </GridItem>
 
@@ -128,6 +129,9 @@ const ProcessForm = ({ process, handleFormSave }) => {
                   ]}
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  rules={{
+                    required: "Status is required",
                   }}
                 />
               </GridItem>

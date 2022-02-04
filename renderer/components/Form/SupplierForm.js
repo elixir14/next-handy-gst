@@ -12,6 +12,10 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import router from "next/router";
 import { useForm } from "react-hook-form";
+import CustomDropDown from "../CustomDropDown/CustomDropDown";
+import CardIcon from "../Card/CardIcon";
+import { Grid } from "@material-ui/core";
+import CardSubHeader from "../Card/CardSubHeader";
 
 const styles = {
   cardCategoryWhite: {
@@ -52,7 +56,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-const SupplierForm = ({ supplier, handleFormSave }) => {
+const SupplierForm = ({ supplier, handleFormSave, cityList, stateList }) => {
   const { control, handleSubmit } = useForm({
     defaultValues: {},
   });
@@ -63,7 +67,7 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
 
   return (
     <div className={classes.content}>
-      <GridItem xs={12} sm={12} md={8}>
+      <GridItem xs={12} sm={12} md={10}>
         <Card>
           <CardHeader color="primary">
             <h4 className={classes.cardTitleWhite}>
@@ -71,6 +75,11 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
             </h4>
           </CardHeader>
           <CardBody>
+            <GridContainer>
+              <GridItem>
+                <CardSubHeader color="primary">Personal details</CardSubHeader>
+              </GridItem>
+            </GridContainer>
             <GridContainer>
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
@@ -81,6 +90,9 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   control={control}
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  rules={{
+                    required: "Name is required",
                   }}
                 />
               </GridItem>
@@ -94,11 +106,9 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                   rules={{
                     pattern: {
-                      value:
-                        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: "Email is Invalid",
                     },
                     required: "Email is required",
@@ -116,7 +126,9 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Phone no. is required",
+                  }}
                 />
               </GridItem>
 
@@ -130,7 +142,6 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -143,7 +154,9 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Address1 is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -156,7 +169,6 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -169,7 +181,36 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                />
+              </GridItem>
+              <GridItem xs={12} sm={12} md={6}>
+                <CustomDropDown
                   control={control}
+                  labelText="City"
+                  name="city_id"
+                  defaultValue={supplier?.city_id || ""}
+                  optionData={cityList}
+                  formControlProps={{
+                    fullWidth: true,
+                  }}
+                  rules={{
+                    required: "State is required",
+                  }}
+                />
+              </GridItem>
+              <GridItem xs={12} sm={12} md={6}>
+                <CustomDropDown
+                  control={control}
+                  labelText="State"
+                  name="state_id"
+                  defaultValue={supplier?.state_id || ""}
+                  optionData={stateList}
+                  formControlProps={{
+                    fullWidth: true,
+                  }}
+                  rules={{
+                    required: "State is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -182,9 +223,18 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Pincode is required",
+                  }}
                 />
               </GridItem>
+            </GridContainer>
+            <GridContainer>
+              <GridItem>
+                <CardSubHeader color="primary">Primary Details</CardSubHeader>
+              </GridItem>
+            </GridContainer>
+            <GridContainer>
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
                   labelText="Primary name"
@@ -195,7 +245,9 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Name is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -221,7 +273,9 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Phone no. is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -237,14 +291,20 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   control={control}
                   rules={{
                     pattern: {
-                      value:
-                        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: "Email is Invalid",
                     },
                     required: "Email is required",
                   }}
                 />
               </GridItem>
+            </GridContainer>
+            <GridContainer>
+              <GridItem>
+                <CardSubHeader color="primary">Legal Details</CardSubHeader>
+              </GridItem>
+            </GridContainer>
+            <GridContainer>
               <GridItem xs={12} sm={12} md={6}>
                 <CustomInput
                   labelText="GST number"
@@ -255,7 +315,6 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -268,7 +327,6 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -281,7 +339,9 @@ const SupplierForm = ({ supplier, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "PAN is required",
+                  }}
                 />
               </GridItem>
             </GridContainer>

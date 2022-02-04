@@ -84,7 +84,9 @@ const StateForm = ({ state, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Name is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -98,7 +100,9 @@ const StateForm = ({ state, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Abbreviation is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -112,7 +116,9 @@ const StateForm = ({ state, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "GST Code is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>

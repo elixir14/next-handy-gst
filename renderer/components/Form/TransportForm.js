@@ -68,7 +68,7 @@ const TransportForm = ({ transport, handleFormSave }) => {
         <Card>
           <CardHeader color="primary">
             <h4 className={classes.cardTitleWhite}>
-              {isEdit ? "Edit Process" : "Add Process"}
+              {isEdit ? "Edit Transport" : "Add Transport"}
             </h4>
           </CardHeader>
           <CardBody>
@@ -83,6 +83,9 @@ const TransportForm = ({ transport, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  rules={{
+                    required: "Name is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -96,7 +99,9 @@ const TransportForm = ({ transport, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Vehicle is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -110,7 +115,9 @@ const TransportForm = ({ transport, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Vehicle No. is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -123,7 +130,9 @@ const TransportForm = ({ transport, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Contact number is required",
+                  }}
                 />
               </GridItem>
             </GridContainer>

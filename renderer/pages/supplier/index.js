@@ -53,7 +53,7 @@ const index = ({ suppliers }) => {
               color="primary"
               onClick={() => router.push(`/supplier/add`)}
             >
-              Add User
+              Add Supplier
             </Button>
             <Table
               tableHeaderColor="primary"

@@ -28,10 +28,7 @@ const create = () => {
         router.push("/user");
       })
       .catch((error) => {
-        setError(error.response.data.key, {
-          type: "manual",
-          message: error.response.data.message,
-        });
+        toast.error(error.response.data.message);
       });
   };
 

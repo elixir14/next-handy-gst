@@ -83,6 +83,9 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  rules={{
+                    required: "Name is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -138,6 +141,9 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  rules={{
+                    required: "Groups is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -149,6 +155,9 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
                   optionData={unitList}
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  rules={{
+                    required: "Unit is required",
                   }}
                 />
               </GridItem>
@@ -181,9 +190,12 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  rules={{
+                    required: "Status is required",
+                  }}
                 />
               </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
+              <GridItem xs={12} sm={12} md={12}>
                 <CustomInput
                   labelText="Description"
                   id="description"
@@ -191,10 +203,13 @@ const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
                   isDisable={isEdit}
                   defaultValue={item?.description || ""}
                   control={control}
+                  inputProps={{
+                    multiline: true,
+                    rows: 5,
+                  }}
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                 />
               </GridItem>
             </GridContainer>

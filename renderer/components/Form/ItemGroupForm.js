@@ -73,7 +73,7 @@ const ItemGroupForm = ({ itemGroup, handleFormSave }) => {
           </CardHeader>
           <CardBody>
             <GridContainer>
-              <GridItem xs={12} sm={12} md={6}>
+              <GridItem xs={12} sm={12} md={12}>
                 <CustomInput
                   labelText="Name"
                   defaultValue={itemGroup?.name || ""}
@@ -82,6 +82,9 @@ const ItemGroupForm = ({ itemGroup, handleFormSave }) => {
                   control={control}
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  rules={{
+                    required: "Name is required",
                   }}
                 />
               </GridItem>
@@ -96,7 +99,6 @@ const ItemGroupForm = ({ itemGroup, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -114,9 +116,12 @@ const ItemGroupForm = ({ itemGroup, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  rules={{
+                    required: "Status is required",
+                  }}
                 />
               </GridItem>
-              <GridItem xs={12} sm={12} md={6}>
+              <GridItem xs={12} sm={12} md={12}>
                 <CustomInput
                   labelText="Description"
                   id="description"
@@ -124,10 +129,13 @@ const ItemGroupForm = ({ itemGroup, handleFormSave }) => {
                   isDisable={isEdit}
                   defaultValue={itemGroup?.description || ""}
                   control={control}
+                  inputProps={{
+                    multiline: true,
+                    rows: 5,
+                  }}
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                 />
               </GridItem>
             </GridContainer>
