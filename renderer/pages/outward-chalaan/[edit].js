@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import router from "next/router";
 import OutwardChalaanForm from "components/Form/OutwardChalaanForm";
 import Admin from "layouts/Admin";
@@ -16,14 +16,53 @@ const edit = (props) => {
   const itemList = JSON.parse(props.itemList);
   const settingList = JSON.parse(props.settingList);
 
+  const [chalaanItems, setChalaanItems] = useState(chalaanItemList);
+  const [tempItems, setTempItems] = useState(chalaanItemList);
+
   const { setError } = useForm();
 
-  const handleFormEdit = (data) => {
+  const deleteChalaanItems = () => {
+    let ids = tempItems.flatMap((obj) => {
+      if (!/^item_/.test(obj.id)) {
+        return obj.id;
+      }
+      return [];
+    });
+
+    axios
+      .delete(`/api/outward_chalaan_item/many/delete`, {
+        data: { ids: ids || [] },
+      })
+      .catch((error) => {
+        console.log(
+          "🚀 ~ file: index.js ~ line 36 ~ deleteEntry ~ error",
+          error
+        );
+      });
+  };
+
+  const createChalaanItems = (id) => {
+    const payload = chalaanItems.map((item) => {
+      delete item.id;
+      item["outward_chalaan_id"] = id;
+      return item;
+    });
+    axios.post("/api/outward_chalaan_item/many/add", payload).catch((error) => {
+      setError(error.response.data.key, {
+        type: "manual",
+        message: error.response.data.message,
+      });
+    });
+  };
+
+  const handleFormEdit = async (data) => {
+    await deleteChalaanItems();
     const date = new Date(data.date);
     const payload = { ...data, date };
-    axios
+    await axios
       .post(`/api/outward-chalaan/edit/${outward_chalaan.id}`, payload)
-      .then((res) => {
+      .then(async (res) => {
+        await createChalaanItems(res.data.id);
         toast.success("Chalaan edited successfully");
         router.push("/outward-chalaan");
       })
@@ -42,9 +81,12 @@ const edit = (props) => {
       transportList={transportList}
       supplierList={supplierList}
       processList={processList}
-      chalaanItemList={chalaanItemList}
       itemList={itemList}
       settingList={settingList}
+      chalaanItems={chalaanItems}
+      setChalaanItems={setChalaanItems}
+      tempItems={tempItems}
+      setTempItems={setTempItems}
     />
   );
 };

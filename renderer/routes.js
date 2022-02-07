@@ -16,10 +16,18 @@
 
 */
 // @material-ui/icons
-import { BubbleChart, LibraryBooks } from "@material-ui/icons";
-import BusinessIcon from "@material-ui/icons/Business";
 import Dashboard from "@material-ui/icons/Dashboard";
 import GroupIcon from "@material-ui/icons/Group";
+import EmojiTransportationIcon from "@material-ui/icons/EmojiTransportation";
+import LocationCityIcon from "@material-ui/icons/LocationCity";
+import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
+import InputIcon from "@material-ui/icons/Input";
+import TransferWithinAStationIcon from "@material-ui/icons/TransferWithinAStation";
+import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
+import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
+import LocalMallIcon from "@material-ui/icons/LocalMall";
+import ReceiptIcon from "@material-ui/icons/Receipt";
+import CasinoIcon from "@material-ui/icons/Casino";
 
 const dashboardRoutes = [
   {
@@ -35,59 +43,59 @@ const dashboardRoutes = [
   {
     path: "/supplier",
     name: "Supplier",
-    icon: GroupIcon,
+    icon: TransferWithinAStationIcon,
   },
   {
     path: "/outward-chalaan",
     name: "Outward Chalaan",
-    icon: GroupIcon,
+    icon: ReceiptIcon,
   },
   {
     path: "/master",
     name: "Masters",
-    icon: GroupIcon,
+    icon: InputIcon,
     children: [
       {
         path: "/process",
         name: "Process",
-        icon: GroupIcon,
+        icon: CasinoIcon,
       },
       {
         path: "/group",
         name: "Item groups",
-        icon: GroupIcon,
+        icon: SupervisedUserCircleIcon,
       },
       {
         path: "/item",
         name: "Items",
-        icon: GroupIcon,
+        icon: LocalMallIcon,
       },
       {
         path: "/transport",
         name: "Transports",
-        icon: GroupIcon,
+        icon: EmojiTransportationIcon,
       },
       {
         path: "/unit",
         name: "Units",
-        icon: GroupIcon,
+        icon: ShoppingBasketIcon,
       },
       {
         path: "/city",
         name: "Cities",
-        icon: GroupIcon,
+        icon: LocationCityIcon,
       },
       {
         path: "/state",
         name: "States",
-        icon: GroupIcon,
+        icon: LocationCityIcon,
       },
     ],
   },
   {
     path: "/settings",
     name: "Settings",
-    icon: GroupIcon,
+    icon: SettingsApplicationsIcon,
   },
 ];
 
