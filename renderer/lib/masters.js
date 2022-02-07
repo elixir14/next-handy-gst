@@ -35,3 +35,7 @@ export const items = async () => {
 export const outward_chalaan_item = async () => {
   return await prisma.outward_chalaan_item.findMany();
 };
+
+export const settings = async () => {
+  return await prisma.settings.findMany();
+};

@@ -50,3 +50,9 @@ export const SETTINGS = [
     label: "Outward challan next number",
   },
 ];
+
+export const USER_TYPE = [
+  { id: "administrator", name: "Administrator" },
+  { id: "supervisor", name: "Supervisor" },
+  { id: "employee", name: "Employee" },
+];

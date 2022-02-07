@@ -14,6 +14,7 @@ import CustomDropDown from "components/CustomDropDown/CustomDropDown.js";
 import router from "next/router";
 import { useForm } from "react-hook-form";
 import PasswordInput from "../PasswordInput/PasswordInput";
+import { USER_TYPE } from "lib/constants";
 
 const styles = {
   cardCategoryWhite: {
@@ -55,16 +56,13 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 const UserForm = ({ user, handleFormSave, onError }) => {
-  const { control, handleSubmit, watch, setValue, getValues } = useForm();
+  const userType = USER_TYPE.filter((type) => type.id === user?.type)[0];
+
+  const { control, handleSubmit, getValues } = useForm();
 
   const isEdit = !!user;
 
   const classes = useStyles();
-  const state_id = watch("state_id");
-
-  useEffect(() => {
-    setValue("type", "");
-  }, [state_id]);
 
   return (
     <div className={classes.content}>
@@ -103,7 +101,9 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "First name is required",
+                  }}
                 />
               </GridItem>
 
@@ -117,7 +117,9 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Last name is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -130,7 +132,6 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -143,7 +144,6 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                   rules={{
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -163,7 +163,6 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -171,15 +170,11 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   control={control}
                   labelText="Type"
                   name="type"
-                  defaultValue={user?.type || ""}
-                  optionData={[
-                    { id: "admin", name: "Admin" },
-                    { id: "user", name: "User" },
-                  ]}
+                  defaultValue={userType || ""}
+                  optionData={USER_TYPE}
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
                   rules={{
                     required: "Type is required",
                   }}

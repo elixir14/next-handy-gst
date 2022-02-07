@@ -5,7 +5,7 @@ import Admin from "layouts/Admin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { items, processes, suppliers, transports } from "lib/masters";
+import { items, processes, settings, suppliers, transports } from "lib/masters";
 
 const create = (props) => {
   const { setError } = useForm();
@@ -14,6 +14,7 @@ const create = (props) => {
   const supplierList = JSON.parse(props.supplierList);
   const processList = JSON.parse(props.processList);
   const itemList = JSON.parse(props.itemList);
+  const settingList = JSON.parse(props.settingList);
 
   const handleFormSave = (data) => {
     const date = new Date(data.date);
@@ -39,6 +40,7 @@ const create = (props) => {
       supplierList={supplierList}
       processList={processList}
       itemList={itemList}
+      settingList={settingList}
     />
   );
 };
@@ -53,6 +55,7 @@ export async function getServerSideProps() {
   const supplierList = await suppliers();
   const processList = await processes();
   const itemList = await items();
+  const settingList = await settings();
 
   return {
     props: {
@@ -60,6 +63,7 @@ export async function getServerSideProps() {
       supplierList: JSON.stringify(supplierList),
       processList: JSON.stringify(processList),
       itemList: JSON.stringify(itemList),
+      settingList: JSON.stringify(settingList),
     },
   };
 }
