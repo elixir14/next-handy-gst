@@ -5,7 +5,7 @@ import Admin from "layouts/Admin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { items, processes, suppliers, transports } from "lib/masters";
+import { items, processes, settings, suppliers, transports } from "lib/masters";
 
 const edit = (props) => {
   const outward_chalaan = JSON.parse(props.outward_chalaan);
@@ -14,6 +14,7 @@ const edit = (props) => {
   const processList = JSON.parse(props.processList);
   const chalaanItemList = JSON.parse(props.chalaanItemList);
   const itemList = JSON.parse(props.itemList);
+  const settingList = JSON.parse(props.settingList);
 
   const { setError } = useForm();
 
@@ -43,6 +44,7 @@ const edit = (props) => {
       processList={processList}
       chalaanItemList={chalaanItemList}
       itemList={itemList}
+      settingList={settingList}
     />
   );
 };
@@ -69,6 +71,7 @@ export async function getServerSideProps({ params }) {
   const supplierList = await suppliers();
   const processList = await processes();
   const itemList = await items();
+  const settingList = await settings();
 
   return {
     props: {
@@ -78,6 +81,7 @@ export async function getServerSideProps({ params }) {
       processList: JSON.stringify(processList),
       chalaanItemList: JSON.stringify(chalaanItemList),
       itemList: JSON.stringify(itemList),
+      settingList: JSON.stringify(settingList),
     },
   };
 }

@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import CustomDropDown from "../CustomDropDown/CustomDropDown";
 import axios from "axios";
 import toast from "react-hot-toast";
+import CardSubHeader from "../Card/CardSubHeader";
 
 const styles = {
   cardCategoryWhite: {
@@ -65,6 +66,7 @@ const OutwardChalaanForm = ({
   processList,
   chalaanItemList = [],
   itemList,
+  settingList,
 }) => {
   const { control, handleSubmit } = useForm();
   const {
@@ -74,6 +76,11 @@ const OutwardChalaanForm = ({
     reset: itemReset,
     setValue: setItemValue,
   } = useForm();
+
+  let setting = {};
+  settingList.map((s) => {
+    setting[s.key] = s;
+  });
 
   // const mergeById = (a1, a2) =>
   //   a1.map((itm) => ({
@@ -156,6 +163,12 @@ const OutwardChalaanForm = ({
       });
   };
 
+  const readOnlyInput = {
+    readOnly: true,
+    tabIndex: -1,
+    style: { pointerEvents: "none" },
+  };
+
   return (
     <div className={classes.content}>
       <GridItem xs={12} sm={12} md={12}>
@@ -186,7 +199,11 @@ const OutwardChalaanForm = ({
                   id="number"
                   name="number"
                   isDisable={isEdit}
-                  defaultValue={outward_chalaan?.number || ""}
+                  defaultValue={
+                    outward_chalaan?.number
+                      ? outward_chalaan?.number
+                      : `${setting.prefix.value}${setting.outward_challan_next_number.value}${setting.suffix.value}`
+                  }
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -231,6 +248,11 @@ const OutwardChalaanForm = ({
                   }}
                   control={control}
                 />
+              </GridItem>
+            </GridContainer>
+            <GridContainer>
+              <GridItem>
+                <CardSubHeader color="primary">Add Items</CardSubHeader>
               </GridItem>
             </GridContainer>
             <GridContainer>
@@ -322,9 +344,11 @@ const OutwardChalaanForm = ({
                   rawClick={handleEdit}
                   deleteEntry={handleDelete}
                   fullData={true}
+                  isEdit={true}
                 />
               </GridItem>
             </GridContainer>
+            <hr style={{ marginTop: "35px" }} />
             <GridContainer>
               <GridItem xs={12} sm={12} md={3}>
                 <CustomInput
@@ -350,6 +374,7 @@ const OutwardChalaanForm = ({
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  inputProps={readOnlyInput}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={3}>
@@ -363,6 +388,7 @@ const OutwardChalaanForm = ({
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  inputProps={readOnlyInput}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={3}>
@@ -376,6 +402,7 @@ const OutwardChalaanForm = ({
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  inputProps={readOnlyInput}
                 />
               </GridItem>
             </GridContainer>
@@ -404,6 +431,7 @@ const OutwardChalaanForm = ({
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  inputProps={readOnlyInput}
                 />
               </GridItem>{" "}
               <GridItem xs={12} sm={12} md={2}>
@@ -412,11 +440,12 @@ const OutwardChalaanForm = ({
                   id="sgst"
                   // name="sgst"
                   isDisable={isEdit}
-                  defaultValue={outward_chalaan?.sgst || ""}
+                  defaultValue={setting?.SGST?.value || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  inputProps={readOnlyInput}
                 />
               </GridItem>{" "}
               <GridItem xs={12} sm={12} md={2}>
@@ -425,11 +454,12 @@ const OutwardChalaanForm = ({
                   id="cgst"
                   // name="cgst"
                   isDisable={isEdit}
-                  defaultValue={outward_chalaan?.cgst || ""}
+                  defaultValue={setting.CGST?.value || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  inputProps={readOnlyInput}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={2}>
@@ -438,11 +468,12 @@ const OutwardChalaanForm = ({
                   id="igst"
                   // name="igst"
                   isDisable={isEdit}
-                  defaultValue={outward_chalaan?.igst || ""}
+                  defaultValue={setting?.IGST?.value || ""}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  inputProps={readOnlyInput}
                 />
               </GridItem>
             </GridContainer>
