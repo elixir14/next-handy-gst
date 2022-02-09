@@ -343,6 +343,8 @@ const OutwardChalaanForm = ({
                   fullData={true}
                   isEdit={true}
                   pagination={false}
+                  selector="item_id"
+                  selectorData={itemList}
                 />
               </GridItem>
             </GridContainer>

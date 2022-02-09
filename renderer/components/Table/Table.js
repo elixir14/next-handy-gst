@@ -21,6 +21,8 @@ export default function CustomTable(props) {
     rawClick,
     deleteEntry,
     searchKey,
+    selector,
+    selectorData = [],
     isEdit = true,
     isDelete = true,
     fullData = false,
@@ -152,7 +154,14 @@ export default function CustomTable(props) {
                         )}
                       </>
                     ) : (
-                      <>{l === "id" ? "" : list[l]}</>
+                      <>
+                        {l === "id"
+                          ? ""
+                          : l === selector
+                          ? selectorData.filter((s) => s.id === list[l])[0]
+                              ?.name
+                          : list[l]}
+                      </>
                     )}
                   </TableCell>
                 );
