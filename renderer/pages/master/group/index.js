@@ -9,6 +9,7 @@ import Table from "components/Table/Table";
 import router from "next/router";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { STATUS } from "lib/constants";
 
 const index = ({ itemGroups }) => {
   const itemGroupList = JSON.parse(itemGroups);
@@ -58,6 +59,8 @@ const index = ({ itemGroups }) => {
               rawClick={rawClick}
               deleteEntry={deleteEntry}
               searchKey="name"
+              selector="status"
+              selectorData={STATUS}
             />
           </CardBody>
         </Card>

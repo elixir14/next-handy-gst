@@ -9,6 +9,7 @@ import Table from "components/Table/Table";
 import router from "next/router";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { STATUS } from "lib/constants";
 
 const index = ({ processes }) => {
   const processList = JSON.parse(processes);
@@ -59,6 +60,8 @@ const index = ({ processes }) => {
               rawClick={rawClick}
               deleteEntry={deleteEntry}
               searchKey="name"
+              selector="status"
+              selectorData={STATUS}
             />
           </CardBody>
         </Card>
