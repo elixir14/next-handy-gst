@@ -57,6 +57,7 @@ const index = ({ itemGroups }) => {
               tableData={itemGroupList}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
+              searchKey="name"
             />
           </CardBody>
         </Card>

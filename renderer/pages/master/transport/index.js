@@ -58,6 +58,7 @@ const index = ({ transports }) => {
               tableData={transportList}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
+              searchKey="name"
             />
           </CardBody>
         </Card>

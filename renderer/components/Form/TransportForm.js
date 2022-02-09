@@ -115,8 +115,14 @@ const TransportForm = ({ transport, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  inputProps={{ placeholder: "GJ-00 AA 0000" }}
                   rules={{
                     required: "Vehicle No. is required",
+                    pattern: {
+                      value:
+                        /^[A-Z|a-z]{2}[ -][0-9]{1,2}(?: [A-Z|a-z])?(?: [A-Z|a-z]*)? [0-9]{1,4}$/i,
+                      message: "Vehicle No. is Invalid",
+                    },
                   }}
                 />
               </GridItem>
@@ -132,7 +138,16 @@ const TransportForm = ({ transport, handleFormSave }) => {
                   }}
                   rules={{
                     required: "Contact number is required",
+                    minLength: {
+                      value: 10,
+                      message: "Contact No. is Invalid",
+                    },
+                    maxLength: {
+                      value: 10,
+                      message: "Contact No. is Invalid",
+                    },
                   }}
+                  number={true}
                 />
               </GridItem>
             </GridContainer>

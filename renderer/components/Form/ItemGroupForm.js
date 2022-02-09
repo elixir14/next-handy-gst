@@ -141,10 +141,7 @@ const ItemGroupForm = ({ itemGroup, handleFormSave }) => {
             </GridContainer>
           </CardBody>
           <CardFooter plain>
-            <Button
-              color="rose"
-              onClick={() => router.push("/master/itemGroup")}
-            >
+            <Button color="rose" onClick={() => router.push("/master/group")}>
               Cancel
             </Button>
             <Button color="primary" onClick={handleSubmit(handleFormSave)}>

@@ -61,6 +61,7 @@ const index = ({ suppliers }) => {
               tableData={supplierList}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
+              searchKey="name"
             />
           </CardBody>
         </Card>

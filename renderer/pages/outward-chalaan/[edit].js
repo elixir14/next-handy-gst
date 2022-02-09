@@ -58,6 +58,9 @@ const edit = (props) => {
   const handleFormEdit = async (data) => {
     await deleteChalaanItems();
     const date = new Date(data.date);
+    delete data.total_quantity;
+    delete data.total_net_weight;
+    delete data.total_gross_weight;
     const payload = { ...data, date };
     await axios
       .post(`/api/outward-chalaan/edit/${outward_chalaan.id}`, payload)
