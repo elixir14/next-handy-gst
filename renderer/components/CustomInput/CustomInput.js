@@ -9,12 +9,20 @@ import Input from "@material-ui/core/Input";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/customInputStyle.js";
 import { useController } from "react-hook-form";
+import { allowOnlyNumber } from "lib/helper";
 
 const useStyles = makeStyles(styles);
 export default function CustomInput(props) {
   const classes = useStyles();
-  const { formControlProps, labelText, id, labelProps, inputProps, success } =
-    props;
+  const {
+    formControlProps,
+    labelText,
+    id,
+    labelProps,
+    inputProps,
+    success,
+    number,
+  } = props;
   const { field, fieldState } = useController(props);
   const { error } = fieldState;
 
@@ -44,15 +52,28 @@ export default function CustomInput(props) {
           {labelText}
         </InputLabel>
       ) : null}
-      <Input
-        {...field}
-        classes={{
-          root: marginTop,
-          disabled: classes.disabled,
-          underline: underlineClasses,
-        }}
-        {...inputProps}
-      />
+      {number ? (
+        <Input
+          {...field}
+          classes={{
+            root: marginTop,
+            disabled: classes.disabled,
+            underline: underlineClasses,
+          }}
+          {...inputProps}
+          onChange={(e) => field.onChange(allowOnlyNumber(e.target.value))}
+        />
+      ) : (
+        <Input
+          {...field}
+          classes={{
+            root: marginTop,
+            disabled: classes.disabled,
+            underline: underlineClasses,
+          }}
+          {...inputProps}
+        />
+      )}
       {error ? <p className={classes.errorMsg}>{error?.message}</p> : null}
     </FormControl>
   );

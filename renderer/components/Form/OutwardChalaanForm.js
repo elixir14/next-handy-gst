@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -70,7 +70,7 @@ const OutwardChalaanForm = ({
   tempItems,
 }) => {
   const classes = useStyles();
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, setValue } = useForm();
   const {
     control: itemControl,
     handleSubmit: handleItemSubmit,
@@ -91,7 +91,7 @@ const OutwardChalaanForm = ({
 
   const headerData = [
     { id: "id", name: "Id" },
-    { id: "item", name: "Item" },
+    { id: "item_id", name: "Item" },
     { id: "quantity", name: "Quantity" },
     { id: "net_weight", name: "Net Weight(kgs)" },
     { id: "gross_weight", name: "Gross Weight(kgs)" },
@@ -127,6 +127,18 @@ const OutwardChalaanForm = ({
     tabIndex: -1,
     style: { pointerEvents: "none" },
   };
+
+  useEffect(() => {
+    setValue("total_quantity", chalaanItems.sum("quantity"), {
+      shouldValidate: true,
+    });
+    setValue("total_net_weight", chalaanItems.sum("net_weight"), {
+      shouldValidate: true,
+    });
+    setValue("total_gross_weight", chalaanItems.sum("gross_weight"), {
+      shouldValidate: true,
+    });
+  }, [chalaanItems]);
 
   return (
     <div className={classes.content}>
@@ -255,6 +267,7 @@ const OutwardChalaanForm = ({
                   rules={{
                     required: "Quantity is required",
                   }}
+                  number={true}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={2}>
@@ -271,6 +284,7 @@ const OutwardChalaanForm = ({
                   rules={{
                     required: "Net Weight is required",
                   }}
+                  number={true}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={2}>
@@ -287,6 +301,7 @@ const OutwardChalaanForm = ({
                   rules={{
                     required: "Gross Weight is required",
                   }}
+                  number={true}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={2}>
@@ -327,6 +342,7 @@ const OutwardChalaanForm = ({
                   deleteEntry={handleItemDelete}
                   fullData={true}
                   isEdit={true}
+                  pagination={false}
                 />
               </GridItem>
             </GridContainer>
@@ -351,10 +367,9 @@ const OutwardChalaanForm = ({
               <GridItem xs={12} sm={12} md={3}>
                 <CustomInput
                   labelText="Total Quantity"
-                  id="total_quantity"
-                  // name="total_quantity"
+                  name="total_quantity"
                   isDisable={isEdit}
-                  defaultValue={outward_chalaan?.total_quantity || ""}
+                  defaultValue={0}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -365,10 +380,9 @@ const OutwardChalaanForm = ({
               <GridItem xs={12} sm={12} md={3}>
                 <CustomInput
                   labelText="Net Weight"
-                  id="net_weight"
-                  // name="net_weight"
+                  name="total_net_weight"
                   isDisable={isEdit}
-                  defaultValue={outward_chalaan?.net_weight || ""}
+                  defaultValue={0}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -379,10 +393,9 @@ const OutwardChalaanForm = ({
               <GridItem xs={12} sm={12} md={3}>
                 <CustomInput
                   labelText="Gross Weight"
-                  id="gross_weight"
-                  // name="gross_weight"
+                  name="total_gross_weight"
                   isDisable={isEdit}
-                  defaultValue={outward_chalaan?.gross_weight || ""}
+                  defaultValue={0}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
@@ -412,7 +425,6 @@ const OutwardChalaanForm = ({
                 <CustomInput
                   labelText="Total Amount"
                   id="total_amount"
-                  // name="total_amount"
                   isDisable={isEdit}
                   defaultValue={outward_chalaan?.total_amount || ""}
                   control={control}
@@ -420,13 +432,13 @@ const OutwardChalaanForm = ({
                     fullWidth: true,
                   }}
                   inputProps={readOnlyInput}
+                  number={true}
                 />
               </GridItem>{" "}
               <GridItem xs={12} sm={12} md={2}>
                 <CustomInput
                   labelText="SGST"
                   id="sgst"
-                  // name="sgst"
                   isDisable={isEdit}
                   defaultValue={setting?.SGST?.value || ""}
                   control={control}
@@ -440,7 +452,6 @@ const OutwardChalaanForm = ({
                 <CustomInput
                   labelText="CGST"
                   id="cgst"
-                  // name="cgst"
                   isDisable={isEdit}
                   defaultValue={setting.CGST?.value || ""}
                   control={control}
@@ -454,7 +465,6 @@ const OutwardChalaanForm = ({
                 <CustomInput
                   labelText="IGST"
                   id="igst"
-                  // name="igst"
                   isDisable={isEdit}
                   defaultValue={setting?.IGST?.value || ""}
                   control={control}
@@ -514,3 +524,11 @@ const OutwardChalaanForm = ({
 };
 
 export default OutwardChalaanForm;
+
+Array.prototype.sum = function (prop) {
+  var total = 0;
+  for (var i = 0, _len = this.length; i < _len; i++) {
+    total += parseFloat(this[i][prop]);
+  }
+  return total;
+};

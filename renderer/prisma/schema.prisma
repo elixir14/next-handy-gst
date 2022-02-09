@@ -11,21 +11,23 @@ datasource db {
 }
 
 model City {
-  id         Int      @id @default(autoincrement())
-  state      State    @relation(fields: [state_id], references: [id])
+  id         Int        @id @default(autoincrement())
+  state      State      @relation(fields: [state_id], references: [id])
   state_id   Int
   name       String
-  updated_at DateTime @updatedAt
+  supplier   Supplier[]
+  updated_at DateTime   @updatedAt
 }
 
 model State {
-  id           Int      @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   city         City[]
   gst_code     String
   abbreviation String
   priority     String
   name         String
-  updated_at   DateTime @updatedAt
+  supplier     Supplier[]
+  updated_at   DateTime   @updatedAt
 }
 
 model User {
@@ -62,6 +64,10 @@ model Supplier {
   pan_number          String
   updated_at          DateTime          @updatedAt
   outward_chalaan     outward_chalaan[]
+  City                City?             @relation(fields: [city_id], references: [id])
+  city_id             Int?
+  State               State?            @relation(fields: [state_id], references: [id])
+  state_id            Int?
 
   @@unique([email])
 }
@@ -100,7 +106,6 @@ model Item {
   group_id             Int?
   unit                 Unit?                  @relation(fields: [unit_id], references: [id])
   unit_id              Int?
-  outward_chalaan      outward_chalaan[]
   outward_chalaan_item outward_chalaan_item[]
 }
 
@@ -136,8 +141,6 @@ model outward_chalaan {
   supplier_id          Int?
   Process              Process?               @relation(fields: [process_id], references: [id])
   process_id           Int?
-  Item                 Item?                  @relation(fields: [item_id], references: [id])
-  item_id              Int?
   Transport            Transport?             @relation(fields: [transport_id], references: [id])
   transport_id         Int?
   outward_chalaan_item outward_chalaan_item[]

@@ -11,6 +11,7 @@ import TableCell from "@material-ui/core/TableCell";
 import Button from "components/CustomButtons/Button.js";
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
 import { TablePagination } from "@material-ui/core";
+import SearchBar from "material-ui-search-bar";
 
 export default function CustomTable(props) {
   const {
@@ -19,18 +20,26 @@ export default function CustomTable(props) {
     tableHeaderColor,
     rawClick,
     deleteEntry,
+    searchKey,
     isEdit = true,
     isDelete = true,
     fullData = false,
+    pagination = true,
   } = props;
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const [dataList, setDataList] = useState([]);
+  const [tempList, setTempList] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searched, setSearched] = useState("");
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataList.length) : 0;
+
+  useEffect(() => {
+    setPage(0);
+  }, []);
 
   const setColumnValue = (keys, data) => {
     let string = "";
@@ -56,6 +65,7 @@ export default function CustomTable(props) {
       intersectList.push(intersectDict);
     });
     setDataList(intersectList);
+    setTempList(intersectList);
   }, [tableHead, tableData]);
 
   const handleChangePage = (event, newPage) => {
@@ -67,8 +77,30 @@ export default function CustomTable(props) {
     setPage(0);
   };
 
+  const requestSearch = (searchedVal) => {
+    const filteredRows = tempList.filter((row) => {
+      return row[searchKey].toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setPage(0);
+    setDataList(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setSearched("");
+    requestSearch(searched);
+    setDataList(tempList);
+  };
+
   return (
     <div className={classes.tableResponsive}>
+      {searchKey && (
+        <SearchBar
+          className={classes.tableSearch}
+          value={searched}
+          onChange={(searchVal) => requestSearch(searchVal)}
+          onCancelSearch={() => cancelSearch()}
+        />
+      )}
       <Table className={classes.table}>
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
@@ -87,12 +119,18 @@ export default function CustomTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-          {dataList.map((list, key) => (
+          {(rowsPerPage > 0
+            ? dataList.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )
+            : dataList
+          ).map((list, key) => (
             <TableRow key={key} className={classes.tableBodyRow}>
               {Object.keys(list).map((l, key) => {
                 return (
                   <TableCell className={classes.tableCell} key={key}>
-                    {l.toLocaleLowerCase() === "action" ? (
+                    {l.toLowerCase() === "action" ? (
                       <>
                         {isEdit && (
                           <Button
@@ -121,26 +159,26 @@ export default function CustomTable(props) {
               })}
             </TableRow>
           ))}
+          {emptyRows > 0 && (
+            <TableRow style={{ height: 64 * emptyRows }}></TableRow>
+          )}
         </TableBody>
       </Table>
-      {/* <TablePagination
-        rowsPerPageOptions={[10, 25, { label: "All", value: -1 }]}
-        colSpan={3}
-        count={dataList.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        componentsProps={{
-          select: {
-            "aria-label": "rows per page",
-          },
-          actions: {
-            showFirstButton: true,
-            showLastButton: true,
-          },
-        }}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      /> */}
+      {pagination && (
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={dataList.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+          labelRowsPerPage={<span>Rows:</span>}
+          labelDisplayedRows={({ page }) => {
+            return `Page: ${page + 1}`;
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -161,4 +199,5 @@ CustomTable.propTypes = {
   ]),
   tableHead: PropTypes.arrayOf(PropTypes.object),
   tableData: PropTypes.arrayOf(PropTypes.object),
+  searchKey: PropTypes.any,
 };

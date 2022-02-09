@@ -60,6 +60,7 @@ const index = ({ items }) => {
               tableData={itemList}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
+              searchKey="name"
             />
           </CardBody>
         </Card>

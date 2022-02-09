@@ -59,6 +59,7 @@ const index = ({ outwardChalaans }) => {
               tableData={outwardChalaanList}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
+              searchKey="number"
             />
           </CardBody>
         </Card>

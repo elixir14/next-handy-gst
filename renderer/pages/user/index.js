@@ -56,6 +56,7 @@ const index = ({ users }) => {
               tableData={userList}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
+              searchKey="username"
             />
           </CardBody>
         </Card>

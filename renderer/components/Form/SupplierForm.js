@@ -57,13 +57,19 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 const SupplierForm = ({ supplier, handleFormSave, cityList, stateList }) => {
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     defaultValues: {},
   });
 
   const isEdit = !!supplier;
 
   const classes = useStyles();
+
+  const handleOnChange = (e) => {
+    const { value } = e.target;
+    const city = cityList.filter((city) => city.id === value)[0];
+    setValue("state_id", city.state_id, { shouldValidate: true });
+  };
 
   return (
     <div className={classes.content}>
@@ -128,7 +134,16 @@ const SupplierForm = ({ supplier, handleFormSave, cityList, stateList }) => {
                   }}
                   rules={{
                     required: "Phone no. is required",
+                    minLength: {
+                      value: 10,
+                      message: "Phone no. is Invalid",
+                    },
+                    maxLength: {
+                      value: 10,
+                      message: "Phone no. is Invalid",
+                    },
                   }}
+                  number={true}
                 />
               </GridItem>
 
@@ -193,6 +208,7 @@ const SupplierForm = ({ supplier, handleFormSave, cityList, stateList }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  inputProps={{ onChange: handleOnChange }}
                   rules={{
                     required: "State is required",
                   }}
@@ -208,6 +224,7 @@ const SupplierForm = ({ supplier, handleFormSave, cityList, stateList }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  inputProps={{ readOnly: true }}
                   rules={{
                     required: "State is required",
                   }}
@@ -275,7 +292,16 @@ const SupplierForm = ({ supplier, handleFormSave, cityList, stateList }) => {
                   }}
                   rules={{
                     required: "Phone no. is required",
+                    minLength: {
+                      value: 10,
+                      message: "Phone no. is Invalid",
+                    },
+                    maxLength: {
+                      value: 10,
+                      message: "Phone no. is Invalid",
+                    },
                   }}
+                  number={true}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>

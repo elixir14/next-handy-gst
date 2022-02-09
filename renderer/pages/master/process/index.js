@@ -58,6 +58,7 @@ const index = ({ processes }) => {
               tableData={processList}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
+              searchKey="name"
             />
           </CardBody>
         </Card>

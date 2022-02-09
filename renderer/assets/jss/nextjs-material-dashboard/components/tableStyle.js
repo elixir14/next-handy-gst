@@ -31,6 +31,15 @@ const tableStyle = (theme) => ({
   grayTableHeader: {
     color: grayColor[0],
   },
+  tableSearch: {
+    position: "absolute",
+    top: "15px",
+    right: "20px",
+    borderBottom: "1px solid lightgray",
+    boxShadow: "none",
+    width: "450px",
+    maxWidth: "450px",
+  },
   table: {
     marginBottom: "0",
     width: "100%",

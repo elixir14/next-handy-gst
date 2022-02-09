@@ -66,6 +66,7 @@ const index = (props) => {
               tableData={citiesWithState}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
+              searchKey="name"
             />
           </CardBody>
         </Card>
