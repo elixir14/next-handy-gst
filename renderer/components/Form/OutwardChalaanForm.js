@@ -15,8 +15,6 @@ import router from "next/router";
 import AddCircleSharpIcon from "@material-ui/icons/AddCircleSharp";
 import { useForm } from "react-hook-form";
 import CustomDropDown from "../CustomDropDown/CustomDropDown";
-import axios from "axios";
-import toast from "react-hot-toast";
 import CardSubHeader from "../Card/CardSubHeader";
 
 const styles = {
@@ -64,10 +62,14 @@ const OutwardChalaanForm = ({
   transportList,
   supplierList,
   processList,
-  chalaanItemList = [],
+  chalaanItems,
+  setChalaanItems,
   itemList,
   settingList,
+  setTempItems,
+  tempItems,
 }) => {
+  const classes = useStyles();
   const { control, handleSubmit } = useForm();
   const {
     control: itemControl,
@@ -82,20 +84,8 @@ const OutwardChalaanForm = ({
     setting[s.key] = s;
   });
 
-  // const mergeById = (a1, a2) =>
-  //   a1.map((itm) => ({
-  //     item: a2.find((item) => item.id === itm.item_id && item),
-  //     ...itm,
-  //   }));
-
-  // const chalaanItemWithItem = mergeById(chalaanItemList, itemList);
-
-  const [chalaanItems, setChalaanItems] = useState(chalaanItemList);
-  const [itemId, setItemId] = useState(null);
-
   const isEdit = !!outward_chalaan;
 
-  const classes = useStyles();
   const chalaan_date =
     (outward_chalaan?.date && new Date(outward_chalaan?.date)) || new Date();
 
@@ -109,58 +99,27 @@ const OutwardChalaanForm = ({
     { id: "action", name: "Action" },
   ];
 
-  const handleAddItem = (data) => {
-    const payload = data;
-    if (itemId) {
-      // axios
-      //   .post(`/api/outward-chalaan-item/edit/${itemId}`, payload)
-      //   .then((res) => {
-      //     toast.success("Item edited successfully");
-      //     router.push("/outward-chalaan-item");
-      //   })
-      //   .catch((error) => {
-      //     setError(error.response.data.key, {
-      //       type: "manual",
-      //       message: error.response.data.message,
-      //     });
-      //   });
-    } else {
-      axios
-        .post("/api/outward-chalaan-item/add", payload)
-        .then((res) => {
-          setItemId(null);
-          setChalaanItems([...chalaanItems, payload]);
-          toast.success("Item created successfully");
-          itemReset();
-        })
-        .catch((error) => {
-          setItemError(error.response.data.key, {
-            type: "manual",
-            message: error.response.data.message,
-          });
-        });
-    }
+  const handleAddItem = async (data) => {
+    setChalaanItems([
+      ...chalaanItems,
+      { ...data, id: `item_${chalaanItems.length}` },
+    ]);
+    setTempItems([...tempItems, { ...data, id: `item_${tempItems.length}` }]);
+    itemReset();
   };
 
-  const handleEdit = (data) => {
+  const handleItemEdit = (data) => {
     Object.keys(data).map((key) =>
       setItemValue(key, data[key], { shouldValidate: true })
     );
-    setItemId(data.id);
+
+    const items = chalaanItems.filter((item) => item.id !== data.id);
+    setChalaanItems(items);
   };
 
-  const handleDelete = (id) => {
-    axios
-      .delete(`/api/outward-chalaan-item/delete/${id}`)
-      .then((res) => {
-        toast.success("Item deleted successfully");
-      })
-      .catch((error) => {
-        console.log(
-          "🚀 ~ file: index.js ~ line 36 ~ deleteEntry ~ error",
-          error
-        );
-      });
+  const handleItemDelete = (id) => {
+    const items = chalaanItems.filter((item) => item.id !== id);
+    setChalaanItems(items);
   };
 
   const readOnlyInput = {
@@ -191,6 +150,9 @@ const OutwardChalaanForm = ({
                     fullWidth: true,
                   }}
                   inputProps={{ type: "date" }}
+                  rules={{
+                    required: "Date is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -208,7 +170,9 @@ const OutwardChalaanForm = ({
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  rules={{
+                    required: "Chalaan number is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -221,6 +185,9 @@ const OutwardChalaanForm = ({
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  rules={{
+                    required: "Supplier is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>
@@ -232,6 +199,9 @@ const OutwardChalaanForm = ({
                   optionData={processList}
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  rules={{
+                    required: "Process is required",
                   }}
                 />
               </GridItem>
@@ -266,6 +236,9 @@ const OutwardChalaanForm = ({
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  rules={{
+                    required: "Item is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={2}>
@@ -278,6 +251,9 @@ const OutwardChalaanForm = ({
                   control={itemControl}
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  rules={{
+                    required: "Quantity is required",
                   }}
                 />
               </GridItem>
@@ -292,6 +268,9 @@ const OutwardChalaanForm = ({
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  rules={{
+                    required: "Net Weight is required",
+                  }}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={2}>
@@ -304,6 +283,9 @@ const OutwardChalaanForm = ({
                   control={itemControl}
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  rules={{
+                    required: "Gross Weight is required",
                   }}
                 />
               </GridItem>
@@ -330,7 +312,7 @@ const OutwardChalaanForm = ({
                 }}
               >
                 <AddCircleSharpIcon
-                  style={{ fill: "#8e24aa", cursor: "pointer" }}
+                  style={{ fill: "#2b5ac7", cursor: "pointer" }}
                   onClick={handleItemSubmit(handleAddItem)}
                 />
               </GridItem>
@@ -341,8 +323,8 @@ const OutwardChalaanForm = ({
                   tableHeaderColor="primary"
                   tableHead={headerData}
                   tableData={chalaanItems}
-                  rawClick={handleEdit}
-                  deleteEntry={handleDelete}
+                  rawClick={handleItemEdit}
+                  deleteEntry={handleItemDelete}
                   fullData={true}
                   isEdit={true}
                 />
@@ -360,6 +342,9 @@ const OutwardChalaanForm = ({
                   control={control}
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  rules={{
+                    required: "Bags is required",
                   }}
                 />
               </GridItem>
@@ -418,8 +403,11 @@ const OutwardChalaanForm = ({
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  rules={{
+                    required: "Rate is required",
+                  }}
                 />
-              </GridItem>{" "}
+              </GridItem>
               <GridItem xs={12} sm={12} md={4}>
                 <CustomInput
                   labelText="Total Amount"
@@ -487,6 +475,9 @@ const OutwardChalaanForm = ({
                   optionData={transportList}
                   formControlProps={{
                     fullWidth: true,
+                  }}
+                  rules={{
+                    required: "Transport is required",
                   }}
                 />
               </GridItem>

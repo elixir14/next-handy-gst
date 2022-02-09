@@ -15,6 +15,7 @@ const cardSubHeaderStyle = {
     borderRadius: "3px",
     marginTop: "30px",
     minWidth: "150px",
+    boxShadow: "none !important",
   },
 
   warningCardSubHeader: {

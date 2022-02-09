@@ -10,6 +10,7 @@ import TableCell from "@material-ui/core/TableCell";
 // core components
 import Button from "components/CustomButtons/Button.js";
 import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
+import { TablePagination } from "@material-ui/core";
 
 export default function CustomTable(props) {
   const {
@@ -25,6 +26,11 @@ export default function CustomTable(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const [dataList, setDataList] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const setColumnValue = (keys, data) => {
     let string = "";
@@ -52,6 +58,15 @@ export default function CustomTable(props) {
     setDataList(intersectList);
   }, [tableHead, tableData]);
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -72,46 +87,60 @@ export default function CustomTable(props) {
           </TableHead>
         ) : null}
         <TableBody>
-          {dataList.map((list, key) => {
-            return (
-              <TableRow key={key} className={classes.tableBodyRow}>
-                {Object.keys(list).map((l, key) => {
-                  return (
-                    <TableCell className={classes.tableCell} key={key}>
-                      {l.toLocaleLowerCase() === "action" ? (
-                        <>
-                          {isEdit && (
-                            <Button
-                              size="sm"
-                              color="info"
-                              onClick={() =>
-                                rawClick(fullData ? list : list.id)
-                              }
-                            >
-                              Edit
-                            </Button>
-                          )}
-                          {isDelete && (
-                            <Button
-                              size="sm"
-                              color="rose"
-                              onClick={() => deleteEntry(list.id)}
-                            >
-                              Delete
-                            </Button>
-                          )}
-                        </>
-                      ) : (
-                        <>{l === "id" ? "" : list[l]}</>
-                      )}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
+          {dataList.map((list, key) => (
+            <TableRow key={key} className={classes.tableBodyRow}>
+              {Object.keys(list).map((l, key) => {
+                return (
+                  <TableCell className={classes.tableCell} key={key}>
+                    {l.toLocaleLowerCase() === "action" ? (
+                      <>
+                        {isEdit && (
+                          <Button
+                            size="sm"
+                            color="info"
+                            onClick={() => rawClick(fullData ? list : list.id)}
+                          >
+                            Edit
+                          </Button>
+                        )}
+                        {isDelete && (
+                          <Button
+                            size="sm"
+                            color="rose"
+                            onClick={() => deleteEntry(list.id)}
+                          >
+                            Delete
+                          </Button>
+                        )}
+                      </>
+                    ) : (
+                      <>{l === "id" ? "" : list[l]}</>
+                    )}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
+      {/* <TablePagination
+        rowsPerPageOptions={[10, 25, { label: "All", value: -1 }]}
+        colSpan={3}
+        count={dataList.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        componentsProps={{
+          select: {
+            "aria-label": "rows per page",
+          },
+          actions: {
+            showFirstButton: true,
+            showLastButton: true,
+          },
+        }}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      /> */}
     </div>
   );
 }
