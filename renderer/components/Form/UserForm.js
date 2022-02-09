@@ -56,8 +56,6 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 const UserForm = ({ user, handleFormSave, onError }) => {
-  const userType = USER_TYPE.filter((type) => type.id === user?.type)[0];
-
   const { control, handleSubmit, getValues } = useForm();
 
   const isEdit = !!user;
@@ -170,7 +168,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                   control={control}
                   labelText="Type"
                   name="type"
-                  defaultValue={userType || ""}
+                  defaultValue={user?.type || ""}
                   optionData={USER_TYPE}
                   formControlProps={{
                     fullWidth: true,

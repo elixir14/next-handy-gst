@@ -1,38 +1,19 @@
-export const UserType = [
-  {
-    key: "admin",
-    value: "Admin",
-  },
-  {
-    key: "manager",
-    value: "Manager",
-  },
-  {
-    key: "sales",
-    value: "Sales",
-  },
-  {
-    key: "hr",
-    value: "HR",
-  },
-];
-
 export const STATUS = [
   {
-    key: "pending",
-    value: "Pending",
+    id: "pending",
+    name: "Pending",
   },
   {
-    key: "in process",
-    value: "In Process",
+    id: "in process",
+    name: "In Process",
   },
   {
-    key: "approved",
-    value: "Approved",
+    id: "approved",
+    name: "Approved",
   },
   {
-    key: "completed",
-    value: "Completed",
+    id: "completed",
+    name: "Completed",
   },
 ];
 

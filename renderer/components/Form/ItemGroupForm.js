@@ -13,6 +13,7 @@ import CardFooter from "components/Card/CardFooter.js";
 import router from "next/router";
 import { useForm } from "react-hook-form";
 import CustomDropDown from "../CustomDropDown/CustomDropDown";
+import { STATUS } from "lib/constants";
 
 const styles = {
   cardCategoryWhite: {
@@ -107,12 +108,7 @@ const ItemGroupForm = ({ itemGroup, handleFormSave }) => {
                   labelText="Status"
                   name="status"
                   defaultValue={itemGroup?.status || ""}
-                  optionData={[
-                    { id: "pending", name: "Pending" },
-                    { id: "in_process", name: "In Process" },
-                    { id: "approved", name: "Approved" },
-                    { id: "completed", name: "Completed" },
-                  ]}
+                  optionData={STATUS}
                   formControlProps={{
                     fullWidth: true,
                   }}
