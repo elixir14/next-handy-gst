@@ -8,10 +8,15 @@
   "scripts": {
     "dev": "nextron NODE_OPTIONS=--max-old-space-size=6144",
     "build": "nextron build",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "schema": "sudo -u postgres psql -d next-handy-gst -c 'CREATE SCHEMA IF NOT EXISTS homee AUTHORIZATION postgres;'",
+    "schema:file": "sudo -u postgres psql -f renderer/prisma/schema.sql -v v1=${npm_config_name}"
   },
   "prisma": {
     "seed": "node renderer/prisma/seed.js"
+  },
+  "browser": {
+    "child_process": false
   },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
@@ -23,6 +28,7 @@
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "chartist": "^0.10.1",
+    "child_process": "^1.0.2",
     "classnames": "^2.2.6",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.0.1",

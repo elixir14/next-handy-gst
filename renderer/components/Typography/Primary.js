@@ -8,9 +8,17 @@ import styles from "assets/jss/nextjs-material-dashboard/components/typographySt
 export default function Primary(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
-  const { children } = props;
+  const { children, wrappedClass } = props;
   return (
-    <div className={classes.defaultFontStyle + " " + classes.primaryText}>
+    <div
+      className={
+        classes.defaultFontStyle +
+        " " +
+        classes.primaryText +
+        " " +
+        wrappedClass
+      }
+    >
       {children}
     </div>
   );

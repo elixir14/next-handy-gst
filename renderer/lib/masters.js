@@ -1,41 +1,45 @@
 import prisma from "./prisma";
 
 export const cities = async () => {
-  return await prisma.city.findMany();
+  return await prisma().city.findMany();
 };
 
 export const states = async () => {
-  return await prisma.state.findMany();
+  return await prisma().state.findMany();
 };
 
 export const itemGroups = async () => {
-  return await prisma.group.findMany();
+  return await prisma().group.findMany();
 };
 
 export const units = async () => {
-  return await prisma.unit.findMany();
+  return await prisma().unit.findMany();
 };
 
 export const processes = async () => {
-  return await prisma.process.findMany();
+  return await prisma().process.findMany();
 };
 
 export const suppliers = async () => {
-  return await prisma.supplier.findMany();
+  return await prisma().supplier.findMany();
 };
 
 export const transports = async () => {
-  return await prisma.transport.findMany();
+  return await prisma().transport.findMany();
 };
 
 export const items = async () => {
-  return await prisma.item.findMany();
+  return await prisma().item.findMany();
 };
 
 export const outward_chalaan_item = async () => {
-  return await prisma.outward_chalaan_item.findMany();
+  return await prisma().outward_chalaan_item.findMany();
 };
 
 export const settings = async () => {
-  return await prisma.settings.findMany();
+  return await prisma().settings.findMany();
+};
+
+export const companies = async () => {
+  return await prisma().company.findMany();
 };

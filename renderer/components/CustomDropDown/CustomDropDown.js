@@ -38,6 +38,7 @@ export default function CustomDropDown(props) {
     inputProps,
     name,
     success,
+    additional = false,
   } = props;
 
   const { field, fieldState } = useController(props);
@@ -80,6 +81,11 @@ export default function CustomDropDown(props) {
           return (
             <MenuItem value={option.id} key={option.id}>
               {option.name}
+              {additional && (
+                <span style={{ opacity: 0.6, fontSize: "13px" }}>
+                  &nbsp; (GST No. {option.gst_number})
+                </span>
+              )}
             </MenuItem>
           );
         })}

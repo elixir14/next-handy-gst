@@ -37,7 +37,7 @@ export default edit;
 export async function getServerSideProps({ params }) {
   const editId = params.edit;
 
-  const unit = await prisma.unit.findUnique({
+  const unit = await prisma().unit.findUnique({
     where: {
       id: parseInt(editId),
     },

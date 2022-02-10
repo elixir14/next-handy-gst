@@ -30,6 +30,28 @@ model State {
   updated_at   DateTime   @updatedAt
 }
 
+model Company {
+  id          Int      @id @default(autoincrement())
+  name        String
+  sub_title   String
+  mfg_details String
+  address     Json
+  city        String
+  email       String
+  phone       String
+  fax_number  String
+  tin_number  String
+  cst_number  String
+  ecc_number  String
+  reg_number  String
+  gst_number  String
+  note        String
+  updated_at  DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@unique([gst_number])
+}
+
 model User {
   id         Int      @id @default(autoincrement())
   username   String   @db.VarChar(64)

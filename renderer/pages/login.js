@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
+import Link from "next/link";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -15,6 +16,9 @@ import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import router from "next/router";
 import toast from "react-hot-toast";
+import Primary from "@/components/Typography/Primary";
+import CustomDropDown from "@/components/CustomDropDown/CustomDropDown";
+import { companies } from "lib/masters";
 
 const styles = {
   cardCategoryWhite: {
@@ -24,34 +28,20 @@ const styles = {
     marginTop: "0",
     marginBottom: "0",
   },
-  textBold: {
-    color: "#0062ad",
-    fontWeight: "bold",
-    marginLeft: "3px",
-    cursor: "pointer",
-    marginTop: "0",
-    marginBottom: "0",
-  },
   signUpCont: {
     display: "flex",
-    justifyContent: "center",
+    fontWeight: "400",
+    letterSpacing: "0.5px !important",
     margin: "0",
     padding: "0",
-    fontSize: "15px",
+    fontSize: "15px !important",
     marginTop: "0",
     marginBottom: "0",
+    textDecoration: "underline",
+    cursor: "pointer",
   },
   cardTitleWhite: {
     color: "#FFFFFF",
-    marginTop: "0px",
-    minHeight: "auto",
-    fontWeight: "300",
-    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
-    marginBottom: "3px",
-    textDecoration: "none",
-  },
-  errorMsg: {
-    color: "#FF0000",
     marginTop: "0px",
     minHeight: "auto",
     fontWeight: "300",
@@ -66,19 +56,20 @@ const styles = {
     alignItems: "center",
     minHeight: "calc(100vh - 140px)",
   },
-  FooterCont: {
-    justifyContent: "center",
-  },
 };
 
 const useStyles = makeStyles(styles);
 
-const Login = () => {
+const Login = (props) => {
+  const companyList = JSON.parse(props.companyList);
   const classes = useStyles();
-
   const { handleSubmit, control } = useForm();
 
   const onSubmit = async (data) => {
+    const companyData = companyList.find(
+      (company) => company.id === data.company
+    );
+
     const res = await signIn("credentials", {
       redirect: false,
       email: data.email,
@@ -151,8 +142,29 @@ const Login = () => {
                 />
               </GridItem>
             </GridContainer>
+            <GridContainer>
+              <GridItem xs={12} sm={12} md={12}>
+                <CustomDropDown
+                  control={control}
+                  labelText="Company"
+                  name="company"
+                  optionData={companyList}
+                  defaultValue=""
+                  additional={true}
+                  formControlProps={{
+                    fullWidth: true,
+                  }}
+                  rules={{
+                    required: "Company is required",
+                  }}
+                />
+              </GridItem>
+            </GridContainer>
           </CardBody>
           <CardFooter>
+            <Primary wrappedClass={classes.signUpCont}>
+              <Link href="/import/token">Import your token!</Link>
+            </Primary>
             <Button color="primary" onClick={() => handleSubmit(onSubmit)()}>
               Login
             </Button>
@@ -164,3 +176,13 @@ const Login = () => {
 };
 
 export default Login;
+
+export async function getServerSideProps() {
+  const companyList = await companies();
+
+  return {
+    props: {
+      companyList: JSON.stringify(companyList),
+    },
+  };
+}
