@@ -74,7 +74,7 @@ index.auth = true;
 export default index;
 
 export const getServerSideProps = async () => {
-  const outwardChalaans = await prisma.outward_chalaan.findMany({
+  const outwardChalaans = await prisma().outward_chalaan.findMany({
     orderBy: [
       {
         updated_at: "desc",

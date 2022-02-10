@@ -76,7 +76,7 @@ index.auth = true;
 export default index;
 
 export const getServerSideProps = async () => {
-  const suppliers = await prisma.supplier.findMany({
+  const suppliers = await prisma().supplier.findMany({
     orderBy: [
       {
         updated_at: "desc",

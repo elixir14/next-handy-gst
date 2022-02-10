@@ -1,19 +1,42 @@
 import { PrismaClient } from "@prisma/client";
 
-// PrismaClient is attached to the `global` object in development to prevent
-// exhausting your database connection limit.
-//
-// Learn more:
-// https://pris.ly/d/help/next-js-best-practices
-
-let prisma;
-
-if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient();
-} else {
-  if (!global.prisma) {
-    global.prisma = new PrismaClient();
+const prisma = (schema) => {
+  let prisma;
+  schema = "public";
+  const user = process.env.DB_USERNAME;
+  const password = process.env.DB_PASSWORD;
+  if (process.env.NODE_ENV === "production") {
+    prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: `postgresql://${user}:${password}@localhost:5432/next-handy-gst?schema=${schema}`,
+        },
+      },
+    });
+  } else {
+    if (!global.prisma && global.schema !== schema) {
+      global.prisma = new PrismaClient({
+        datasources: {
+          db: {
+            url: `postgresql://${user}:${password}@localhost:5432/next-handy-gst?schema=${schema}`,
+          },
+        },
+      });
+      global.schema = schema;
+    }
+    prisma = global.prisma;
   }
-  prisma = global.prisma;
-}
+  return prisma;
+};
+
 export default prisma;
+
+//https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#datasources
+
+// const prisma = new PrismaClient({
+//   datasources: {
+//     db: {
+//       url: `mysql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
+//     },
+//   },
+// });

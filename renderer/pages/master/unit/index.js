@@ -75,7 +75,7 @@ index.auth = true;
 export default index;
 
 export const getServerSideProps = async () => {
-  const units = await prisma.unit.findMany({
+  const units = await prisma().unit.findMany({
     orderBy: [
       {
         updated_at: "desc",

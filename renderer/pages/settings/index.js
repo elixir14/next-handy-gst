@@ -181,7 +181,7 @@ index.auth = true;
 export default index;
 
 export const getServerSideProps = async () => {
-  const settingList = await prisma.settings.findMany();
+  const settingList = await prisma().settings.findMany();
   return {
     props: {
       settingList: JSON.stringify(settingList),
