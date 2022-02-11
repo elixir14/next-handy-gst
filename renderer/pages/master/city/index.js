@@ -10,6 +10,7 @@ import router from "next/router";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { states } from "lib/masters";
+import prisma from "lib/prisma";
 
 const index = (props) => {
   const cityList = JSON.parse(props.cities);
@@ -82,7 +83,7 @@ export default index;
 
 export const getServerSideProps = async () => {
   const stateList = await states();
-  const cities = await prisma.city.findMany({
+  const cities = await prisma().city.findMany({
     orderBy: [
       {
         updated_at: "desc",

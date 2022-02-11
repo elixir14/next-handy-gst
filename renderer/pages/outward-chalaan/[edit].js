@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { items, processes, settings, suppliers, transports } from "lib/masters";
+import prisma from "lib/prisma";
 
 const edit = (props) => {
   const outward_chalaan = JSON.parse(props.outward_chalaan);
@@ -102,12 +103,12 @@ export default edit;
 export async function getServerSideProps({ params }) {
   const editId = params.edit;
 
-  const outward_chalaan = await prisma.outward_chalaan.findUnique({
+  const outward_chalaan = await prisma().outward_chalaan.findUnique({
     where: {
       id: parseInt(editId),
     },
   });
-  const chalaanItemList = await prisma.outward_chalaan_item.findMany({
+  const chalaanItemList = await prisma().outward_chalaan_item.findMany({
     where: {
       outward_chalaan_id: parseInt(editId),
     },
