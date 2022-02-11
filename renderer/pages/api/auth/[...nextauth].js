@@ -11,7 +11,7 @@ export default NextAuth({
     CredentialsProvider({
       credentials: {
         email: {
-          label: "email",
+          label: "Email",
           type: "email",
         },
         password: { label: "Password", type: "password" },
@@ -26,18 +26,27 @@ export default NextAuth({
           credentials.password,
           user.password
         );
-        // const isVerified = true;
         if (!user) {
           return null;
         } else if (user && !isVerified) {
           return null;
         }
 
-        return { email: user.email, id: user.id };
+        return { name: credentials.company, email: user.email, id: user.id };
       },
     }),
     // ...add more providers here
   ],
+  callbacks: {
+    async session({ session }) {
+      const company = await prisma().company.findUnique({
+        where: {
+          id: parseInt(session.user.name),
+        },
+      });
+      return { ...session, company };
+    },
+  },
   secret: process.env.JWT_SECRET,
   pages: {
     signIn: "/login",

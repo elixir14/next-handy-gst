@@ -66,14 +66,11 @@ const Login = (props) => {
   const { handleSubmit, control } = useForm();
 
   const onSubmit = async (data) => {
-    const companyData = companyList.find(
-      (company) => company.id === data.company
-    );
-
     const res = await signIn("credentials", {
       redirect: false,
       email: data.email,
       password: data.password,
+      company: data.company,
       callbackUrl: `${window.location.origin}/`,
     });
     if (res.status == 401) {
