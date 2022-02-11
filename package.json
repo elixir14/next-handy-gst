@@ -15,9 +15,6 @@
   "prisma": {
     "seed": "node renderer/prisma/seed.js"
   },
-  "browser": {
-    "child_process": false
-  },
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
