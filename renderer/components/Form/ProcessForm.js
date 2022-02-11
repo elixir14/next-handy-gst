@@ -108,7 +108,7 @@ const ProcessForm = ({ process, handleFormSave }) => {
                   id="min_inward_days"
                   name="min_inward_days"
                   isDisable={isEdit}
-                  defaultValue={parseInt(process?.min_inward_days) || 2}
+                  defaultValue={process?.min_inward_days || "2"}
                   control={control}
                   formControlProps={{
                     fullWidth: true,
