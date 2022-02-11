@@ -5,6 +5,7 @@ import Admin from "layouts/Admin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+import prisma from "lib/prisma";
 
 const edit = (props) => {
   const itemGroup = JSON.parse(props.itemGroup);
@@ -39,7 +40,7 @@ export default edit;
 export async function getServerSideProps({ params }) {
   const editId = params.edit;
 
-  const itemGroup = await prisma.group.findUnique({
+  const itemGroup = await prisma().group.findUnique({
     where: {
       id: parseInt(editId),
     },

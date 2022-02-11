@@ -5,6 +5,7 @@ import Admin from "layouts/Admin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+import prisma from "lib/prisma";
 
 const edit = (props) => {
   const transport = JSON.parse(props.transport);
@@ -39,7 +40,7 @@ export default edit;
 export async function getServerSideProps({ params }) {
   const editId = params.edit;
 
-  const transport = await prisma.transport.findUnique({
+  const transport = await prisma().transport.findUnique({
     where: {
       id: parseInt(editId),
     },

@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import prisma from "lib/prisma";
 
 export default async function handler(req, res) {
@@ -6,7 +5,7 @@ export default async function handler(req, res) {
   const { model } = req.query;
 
   if (model === "user") {
-    const existingUser = await prisma[model.replace(/-/g, "_")].findUnique({
+    const existingUser = await prisma()[model.replace(/-/g, "_")].findUnique({
       where: {
         email: payload.email,
       },
@@ -18,13 +17,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const data = await prisma[model.replace(/-/g, "_")].create({
+    const data = await prisma()[model.replace(/-/g, "_")].create({
       data: payload,
     });
     res.status(200).json(data);
   } catch (e) {
     console.log("🚀 ~ file: signup.js ~ line 14 ~ handler ~ e", e);
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+    if (e instanceof prisma().PrismaClientKnownRequestError) {
       // The .code property can be accessed in a type-safe manner
       if (e.code === "P2002") {
         res

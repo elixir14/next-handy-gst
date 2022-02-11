@@ -10,6 +10,7 @@ import router from "next/router";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { STATUS } from "lib/constants";
+import prisma from "lib/prisma";
 
 const index = ({ units }) => {
   const unitList = JSON.parse(units);
@@ -75,7 +76,7 @@ index.auth = true;
 export default index;
 
 export const getServerSideProps = async () => {
-  const units = await prisma.unit.findMany({
+  const units = await prisma().unit.findMany({
     orderBy: [
       {
         updated_at: "desc",

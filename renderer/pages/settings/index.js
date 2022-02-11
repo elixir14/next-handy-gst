@@ -16,6 +16,7 @@ import { SETTINGS } from "lib/constants";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Danger from "@/components/Typography/Danger";
+import prisma from "lib/prisma";
 
 const styles = {
   cardCategoryWhite: {
@@ -181,7 +182,7 @@ index.auth = true;
 export default index;
 
 export const getServerSideProps = async () => {
-  const settingList = await prisma.settings.findMany();
+  const settingList = await prisma().settings.findMany();
   return {
     props: {
       settingList: JSON.stringify(settingList),
