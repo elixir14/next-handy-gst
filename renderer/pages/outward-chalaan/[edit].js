@@ -102,12 +102,12 @@ export default edit;
 export async function getServerSideProps({ params }) {
   const editId = params.edit;
 
-  const outward_chalaan = await prisma().outward_chalaan.findUnique({
+  const outward_chalaan = await prisma.outward_chalaan.findUnique({
     where: {
       id: parseInt(editId),
     },
   });
-  const chalaanItemList = await prisma().outward_chalaan_item.findMany({
+  const chalaanItemList = await prisma.outward_chalaan_item.findMany({
     where: {
       outward_chalaan_id: parseInt(editId),
     },

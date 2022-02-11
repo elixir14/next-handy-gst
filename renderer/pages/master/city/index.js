@@ -82,7 +82,7 @@ export default index;
 
 export const getServerSideProps = async () => {
   const stateList = await states();
-  const cities = await prisma().city.findMany({
+  const cities = await prisma.city.findMany({
     orderBy: [
       {
         updated_at: "desc",

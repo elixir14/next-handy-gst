@@ -60,7 +60,7 @@ export default edit;
 export async function getServerSideProps({ params }) {
   const editId = params.edit;
 
-  const supplier = await prisma().supplier.findUnique({
+  const supplier = await prisma.supplier.findUnique({
     where: {
       id: parseInt(editId),
     },
