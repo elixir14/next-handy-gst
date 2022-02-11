@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = () => {
+const prisma = (schema) => {
   let prisma;
-  const schema = "public";
+  schema = "public";
   const user = process.env.DB_USERNAME;
   const password = process.env.DB_PASSWORD;
   if (process.env.NODE_ENV === "production") {
