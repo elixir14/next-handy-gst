@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -13,8 +13,6 @@ import CardFooter from "components/Card/CardFooter.js";
 import router from "next/router";
 import { useForm } from "react-hook-form";
 import CustomDropDown from "../CustomDropDown/CustomDropDown";
-import CardIcon from "../Card/CardIcon";
-import { Grid } from "@material-ui/core";
 import CardSubHeader from "../Card/CardSubHeader";
 
 const styles = {
@@ -61,14 +59,23 @@ const SupplierForm = ({ supplier, handleFormSave, cityList, stateList }) => {
     defaultValues: {},
   });
 
+  const [stateRequired, setStateRequired] = useState(false);
+  const [filteredCity, setFilteredCity] = useState(cityList);
+
   const isEdit = !!supplier;
 
   const classes = useStyles();
 
-  const handleOnChange = (e) => {
+  const handleOnChangeCity = (e) => {
     const { value } = e.target;
     const city = cityList.filter((city) => city.id === value)[0];
     setValue("state_id", city.state_id, { shouldValidate: true });
+    setStateRequired(true);
+  };
+
+  const handleOnChangeState = (e) => {
+    const { value } = e.target;
+    setFilteredCity(cityList.filter((city) => city.state_id === value));
   };
 
   return (
@@ -204,13 +211,15 @@ const SupplierForm = ({ supplier, handleFormSave, cityList, stateList }) => {
                   labelText="City"
                   name="city_id"
                   defaultValue={supplier?.city_id || ""}
-                  optionData={cityList}
+                  optionData={filteredCity}
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  inputProps={{ onChange: handleOnChange }}
+                  inputProps={{
+                    onChange: handleOnChangeCity,
+                  }}
                   rules={{
-                    required: "State is required",
+                    required: "City is required",
                   }}
                 />
               </GridItem>
@@ -224,7 +233,10 @@ const SupplierForm = ({ supplier, handleFormSave, cityList, stateList }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  inputProps={{ readOnly: true }}
+                  inputProps={{
+                    readOnly: stateRequired,
+                    onChange: handleOnChangeState,
+                  }}
                   rules={{
                     required: "State is required",
                   }}
