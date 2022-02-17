@@ -58,7 +58,6 @@ export default NextAuth({
           id: parseInt(session.user.name.company),
         },
       });
-
       return { ...session, company };
       // return session;
     },
