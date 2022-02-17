@@ -12,7 +12,6 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import router from "next/router";
 import { useForm } from "react-hook-form";
-import CustomDropDown from "../CustomDropDown/CustomDropDown";
 
 const styles = {
   cardCategoryWhite: {
