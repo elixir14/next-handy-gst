@@ -47,8 +47,8 @@ export default class MyApp extends App {
     const Layout = Component.layout || (({ children }) => <>{children}</>);
 
     return (
-      <Layout>
-        <SessionProvider session={session}>
+      <SessionProvider session={session}>
+        <Layout>
           {Component.auth ? (
             <Auth {...pageProps}>
               <Component {...pageProps} />
@@ -56,9 +56,9 @@ export default class MyApp extends App {
           ) : (
             <Component {...pageProps} />
           )}
-        </SessionProvider>
-        <Toaster />
-      </Layout>
+          <Toaster />
+        </Layout>
+      </SessionProvider>
     );
   }
 }

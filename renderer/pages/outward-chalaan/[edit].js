@@ -7,8 +7,10 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { items, processes, settings, suppliers, transports } from "lib/masters";
 import prisma from "lib/prisma";
+import { getSession } from "next-auth/react";
 
 const edit = (props) => {
+  const gst_number = props.gst_number;
   const outward_chalaan = JSON.parse(props.outward_chalaan);
   const transportList = JSON.parse(props.transportList);
   const supplierList = JSON.parse(props.supplierList);
@@ -32,7 +34,7 @@ const edit = (props) => {
 
     axios
       .delete(`/api/outward_chalaan_item/many/delete`, {
-        data: { ids: ids || [] },
+        data: { ids: ids || [], gst_number },
       })
       .catch((error) => {
         console.log(
@@ -48,12 +50,14 @@ const edit = (props) => {
       item["outward_chalaan_id"] = id;
       return item;
     });
-    axios.post("/api/outward_chalaan_item/many/add", payload).catch((error) => {
-      setError(error.response.data.key, {
-        type: "manual",
-        message: error.response.data.message,
+    axios
+      .post("/api/outward_chalaan_item/many/add", { payload, gst_number })
+      .catch((error) => {
+        setError(error.response.data.key, {
+          type: "manual",
+          message: error.response.data.message,
+        });
       });
-    });
   };
 
   const handleFormEdit = async (data) => {
@@ -64,7 +68,10 @@ const edit = (props) => {
     delete data.total_gross_weight;
     const payload = { ...data, date };
     await axios
-      .post(`/api/outward-chalaan/edit/${outward_chalaan.id}`, payload)
+      .post(`/api/outward-chalaan/edit/${outward_chalaan.id}`, {
+        payload,
+        gst_number,
+      })
       .then(async (res) => {
         await createChalaanItems(res.data.id);
         toast.success("Chalaan edited successfully");
@@ -100,27 +107,32 @@ edit.auth = true;
 
 export default edit;
 
-export async function getServerSideProps({ params }) {
-  const editId = params.edit;
+export async function getServerSideProps(ctx) {
+  const session = await getSession(ctx);
+  const gst_number = session?.company?.gst_number?.toLowerCase() || null;
+  const editId = ctx.params.edit;
 
-  const outward_chalaan = await prisma().outward_chalaan.findUnique({
+  const outward_chalaan = await prisma(gst_number).outward_chalaan.findUnique({
     where: {
       id: parseInt(editId),
     },
   });
-  const chalaanItemList = await prisma().outward_chalaan_item.findMany({
+  const chalaanItemList = await prisma(
+    gst_number
+  ).outward_chalaan_item.findMany({
     where: {
       outward_chalaan_id: parseInt(editId),
     },
   });
-  const transportList = await transports();
-  const supplierList = await suppliers();
-  const processList = await processes();
-  const itemList = await items();
-  const settingList = await settings();
+  const transportList = await transports(gst_number);
+  const supplierList = await suppliers(gst_number);
+  const processList = await processes(gst_number);
+  const itemList = await items(gst_number);
+  const settingList = await settings(gst_number);
 
   return {
     props: {
+      gst_number: gst_number || null,
       outward_chalaan: JSON.stringify(outward_chalaan),
       transportList: JSON.stringify(transportList),
       supplierList: JSON.stringify(supplierList),

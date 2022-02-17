@@ -17,6 +17,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Danger from "@/components/Typography/Danger";
 import prisma from "lib/prisma";
+import { getSession } from "next-auth/react";
 
 const styles = {
   cardCategoryWhite: {
@@ -58,6 +59,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 const index = (props) => {
+  const gst_number = props.gst_number;
   const settingList = JSON.parse(props.settingList);
 
   const { control, handleSubmit, setError, getValues, clearErrors } = useForm({
@@ -81,9 +83,9 @@ const index = (props) => {
     }));
 
     const payload = settingData;
-    if (settingData.length) {
+    if (settingList.length) {
       axios
-        .post(`/api/settings/many/edit`, payload)
+        .post(`/api/settings/many/edit`, { payload, gst_number })
         .then((res) => {
           toast.success("Settings edited successfully");
         })
@@ -95,7 +97,7 @@ const index = (props) => {
         });
     } else {
       axios
-        .post("/api/settings/many/add", payload)
+        .post("/api/settings/many/add", { payload, gst_number })
         .then((res) => {
           toast.success("Settings updated successfully");
         })
@@ -181,10 +183,13 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async () => {
-  const settingList = await prisma().settings.findMany();
+export const getServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+  const gst_number = session?.company?.gst_number?.toLowerCase() || null;
+  const settingList = await prisma(gst_number).settings.findMany();
   return {
     props: {
+      gst_number: gst_number || null,
       settingList: JSON.stringify(settingList),
     },
   };

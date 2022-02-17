@@ -2,9 +2,10 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = (schema) => {
   let prisma;
-  schema = "public";
+  schema = schema || "public";
   const user = process.env.DB_USERNAME;
   const password = process.env.DB_PASSWORD;
+
   if (process.env.NODE_ENV === "production") {
     prisma = new PrismaClient({
       datasources: {
@@ -14,7 +15,7 @@ const prisma = (schema) => {
       },
     });
   } else {
-    if (!global.prisma && global.schema !== schema) {
+    if (!global.prisma?._engine?.datasourceOverrides?.db?.includes(schema)) {
       global.prisma = new PrismaClient({
         datasources: {
           db: {
@@ -22,7 +23,6 @@ const prisma = (schema) => {
           },
         },
       });
-      global.schema = schema;
     }
     prisma = global.prisma;
   }
@@ -30,13 +30,3 @@ const prisma = (schema) => {
 };
 
 export default prisma;
-
-//https://www.prisma().io/docs/reference/api-reference/prisma-client-reference#datasources
-
-// const prisma = new PrismaClient({
-//   datasources: {
-//     db: {
-//       url: `mysql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
-//     },
-//   },
-// });

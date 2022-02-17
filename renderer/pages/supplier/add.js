@@ -1,12 +1,15 @@
 import React from "react";
-import router from "next/router";
-import SupplierForm from "components/Form/SupplierForm";
-import Admin from "layouts/Admin";
 import axios from "axios";
+import router from "next/router";
 import toast from "react-hot-toast";
+import { getSession } from "next-auth/react";
+
+import Admin from "layouts/Admin";
 import { cities, states } from "lib/masters";
+import SupplierForm from "components/Form/SupplierForm";
 
 const create = (props) => {
+  const gst_number = props.gst_number;
   const cityList = JSON.parse(props.cityList);
   const stateList = JSON.parse(props.stateList);
   const handleFormSave = (data) => {
@@ -26,7 +29,7 @@ const create = (props) => {
     delete payload.landmark;
 
     axios
-      .post("/api/supplier/add", payload)
+      .post("/api/supplier/add", { payload, gst_number })
       .then((res) => {
         toast.success("Supplier created successfully");
         router.push("/supplier");
@@ -53,13 +56,16 @@ create.auth = true;
 
 export default create;
 
-export async function getServerSideProps() {
-  const cityList = await cities();
-  const stateList = await states();
+export async function getServerSideProps(ctx) {
+  const session = await getSession(ctx);
+  const gst_number = session?.company?.gst_number?.toLowerCase() || null;
+  const cityList = await cities(gst_number);
+  const stateList = await states(gst_number);
   return {
     props: {
       cityList: JSON.stringify(cityList),
       stateList: JSON.stringify(stateList),
+      gst_number: gst_number || null,
     },
   };
 }

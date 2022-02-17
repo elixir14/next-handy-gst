@@ -17,34 +17,50 @@ export default NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const user = await prisma().user.findUnique({
+        const company = await prisma("public").company.findUnique({
+          where: {
+            id: parseInt(credentials.company),
+          },
+        });
+
+        const user = await prisma(
+          company?.gst_number?.toLowerCase()
+        ).user.findUnique({
           where: {
             email: credentials.email,
           },
         });
+
         const isVerified = await verifyPassword(
           credentials.password,
           user.password
         );
+
         if (!user) {
           return null;
         } else if (user && !isVerified) {
           return null;
         }
 
-        return { name: credentials.company, email: user.email, id: user.id };
+        return {
+          name: { company: credentials.company, userId: user.id },
+          email: user.email,
+          id: user.id,
+        };
       },
     }),
     // ...add more providers here
   ],
   callbacks: {
     async session({ session }) {
-      const company = await prisma().company.findUnique({
+      const company = await prisma("public").company.findUnique({
         where: {
-          id: parseInt(session.user.name),
+          id: parseInt(session.user.name.company),
         },
       });
+
       return { ...session, company };
+      // return session;
     },
   },
   secret: process.env.JWT_SECRET,

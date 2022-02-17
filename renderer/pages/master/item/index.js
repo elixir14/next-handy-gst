@@ -11,8 +11,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { STATUS } from "lib/constants";
 import prisma from "lib/prisma";
+import { getSession } from "next-auth/react";
 
-const index = ({ items }) => {
+const index = ({ items, gst_number }) => {
   const itemList = JSON.parse(items);
 
   const headerData = [
@@ -32,7 +33,9 @@ const index = ({ items }) => {
 
   const deleteEntry = (id) => {
     axios
-      .delete(`/api/item/delete/${id}`)
+      .delete(`/api/item/delete/${id}`, {
+        data: { gst_number },
+      })
       .then((res) => {
         toast.success("Item deleted successfully");
         router.push("/master/item");
@@ -78,8 +81,10 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async () => {
-  const items = await prisma().item.findMany({
+export const getServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+  const gst_number = session?.company?.gst_number?.toLowerCase() || null;
+  const items = await prisma(gst_number).item.findMany({
     orderBy: [
       {
         updated_at: "desc",
@@ -88,6 +93,7 @@ export const getServerSideProps = async () => {
   });
   return {
     props: {
+      gst_number: gst_number || null,
       items: JSON.stringify(items),
     },
   };

@@ -1,17 +1,20 @@
 import React from "react";
-import Admin from "layouts/Admin";
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import Table from "components/Table/Table";
-import router from "next/router";
 import axios from "axios";
+import router from "next/router";
 import toast from "react-hot-toast";
+import { getSession } from "next-auth/react";
+
 import prisma from "lib/prisma";
 
-const index = ({ outwardChalaans }) => {
+import Admin from "layouts/Admin";
+import Card from "components/Card/Card.js";
+import Table from "components/Table/Table";
+import GridItem from "components/Grid/GridItem.js";
+import CardBody from "components/Card/CardBody.js";
+import Button from "components/CustomButtons/Button.js";
+import GridContainer from "components/Grid/GridContainer.js";
+
+const index = ({ outwardChalaans, gst_number }) => {
   const outwardChalaanList = JSON.parse(outwardChalaans);
 
   const headerData = [
@@ -30,7 +33,9 @@ const index = ({ outwardChalaans }) => {
 
   const deleteEntry = (id) => {
     axios
-      .delete(`/api/outward-chalaan/delete/${id}`)
+      .delete(`/api/outward-chalaan/delete/${id}`, {
+        data: { gst_number },
+      })
       .then((res) => {
         toast.success("Chalaan deleted successfully");
         router.push("/outward-chalaan");
@@ -74,8 +79,10 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async () => {
-  const outwardChalaans = await prisma().outward_chalaan.findMany({
+export const getServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+  const gst_number = session?.company?.gst_number?.toLowerCase() || null;
+  const outwardChalaans = await prisma(gst_number).outward_chalaan.findMany({
     orderBy: [
       {
         updated_at: "desc",
@@ -84,6 +91,7 @@ export const getServerSideProps = async () => {
   });
   return {
     props: {
+      gst_number: gst_number || null,
       outwardChalaans: JSON.stringify(outwardChalaans),
     },
   };

@@ -176,7 +176,9 @@ const OutwardChalaanForm = ({
                   defaultValue={
                     outward_chalaan?.number
                       ? outward_chalaan?.number
-                      : `${setting.prefix.value}${setting.outward_challan_next_number.value}${setting.suffix.value}`
+                      : `${setting?.prefix?.value ?? ""}${
+                          setting?.outward_challan_next_number?.value ?? ""
+                        }${setting?.suffix?.value ?? ""}`
                   }
                   control={control}
                   formControlProps={{

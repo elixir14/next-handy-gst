@@ -1,5 +1,8 @@
 import React from "react";
 import classNames from "classnames";
+import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import router from "next/router";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -8,31 +11,26 @@ import Grow from "@material-ui/core/Grow";
 import Paper from "@material-ui/core/Paper";
 import Hidden from "@material-ui/core/Hidden";
 import Poppers from "@material-ui/core/Popper";
-import Divider from "@material-ui/core/Divider";
 // @material-ui/icons
 import Person from "@material-ui/icons/Person";
 import Button from "components/CustomButtons/Button.js";
 import useWindowSize from "components/Hooks/useWindowSize.js";
 
 import styles from "assets/jss/nextjs-material-dashboard/components/headerLinksStyle.js";
-import { signOut } from "next-auth/react";
 
-export default function AdminNavbarLinks() {
+export default function AdminNavbarLinks(props) {
   const size = useWindowSize();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
+  const { data: session, status } = useSession();
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
-  const handleClickNotification = (event) => {
-    if (openNotification && openNotification.contains(event.target)) {
-      setOpenNotification(null);
-    } else {
-      setOpenNotification(event.currentTarget);
-    }
+
+  const handleProfile = () => {
+    setOpenProfile(null);
+    router.push(`/user/${session?.user?.name?.userId}`);
   };
-  const handleCloseNotification = () => {
-    setOpenNotification(null);
-  };
+
   const handleClickProfile = (event) => {
     if (openProfile && openProfile.contains(event.target)) {
       setOpenProfile(null);
@@ -84,18 +82,11 @@ export default function AdminNavbarLinks() {
               <Paper>
                 <MenuList role="menu">
                   <MenuItem
-                    onClick={handleCloseProfile}
+                    onClick={handleProfile}
                     className={classes.dropdownItem}
                   >
                     Profile
                   </MenuItem>
-                  <MenuItem
-                    onClick={handleCloseProfile}
-                    className={classes.dropdownItem}
-                  >
-                    Settings
-                  </MenuItem>
-                  <Divider light />
                   <MenuItem
                     onClick={handleCloseProfile}
                     className={classes.dropdownItem}

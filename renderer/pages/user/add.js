@@ -1,13 +1,16 @@
 import React from "react";
-import router from "next/router";
-import UserForm from "components/Form/UserForm";
-import Admin from "layouts/Admin";
-import { useForm } from "react-hook-form";
 import axios from "axios";
+import router from "next/router";
 import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { getSession } from "next-auth/react";
+
 import { hashPassword } from "lib/auth";
 
-const create = () => {
+import UserForm from "components/Form/UserForm";
+import Admin from "layouts/Admin";
+
+const create = ({ gst_number }) => {
   const { setError } = useForm();
 
   const handleFormSave = async (data) => {
@@ -22,7 +25,7 @@ const create = () => {
     const hashedPassword = await hashPassword(data.password);
     const payload = { ...data, password: hashedPassword };
     axios
-      .post("/api/user/add", payload)
+      .post("/api/user/add", { payload, gst_number })
       .then((res) => {
         toast.success("User created successfully");
         router.push("/user");
@@ -48,3 +51,13 @@ create.layout = Admin;
 create.auth = true;
 
 export default create;
+
+export async function getServerSideProps(ctx) {
+  const session = await getSession(ctx);
+
+  return {
+    props: {
+      gst_number: session?.company?.gst_number?.toLowerCase() || null,
+    },
+  };
+}

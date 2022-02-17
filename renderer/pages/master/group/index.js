@@ -1,18 +1,21 @@
 import React from "react";
-import Admin from "layouts/Admin";
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import Table from "components/Table/Table";
-import router from "next/router";
 import axios from "axios";
+import router from "next/router";
 import toast from "react-hot-toast";
-import { STATUS } from "lib/constants";
-import prisma from "lib/prisma";
 
-const index = ({ itemGroups }) => {
+import Admin from "layouts/Admin";
+import Card from "components/Card/Card.js";
+import Table from "components/Table/Table";
+import GridItem from "components/Grid/GridItem.js";
+import CardBody from "components/Card/CardBody.js";
+import Button from "components/CustomButtons/Button.js";
+import GridContainer from "components/Grid/GridContainer.js";
+
+import prisma from "lib/prisma";
+import { STATUS } from "lib/constants";
+import { getSession } from "next-auth/react";
+
+const index = ({ itemGroups, gst_number }) => {
   const itemGroupList = JSON.parse(itemGroups);
 
   const headerData = [
@@ -29,7 +32,9 @@ const index = ({ itemGroups }) => {
 
   const deleteEntry = (id) => {
     axios
-      .delete(`/api/group/delete/${id}`)
+      .delete(`/api/group/delete/${id}`, {
+        data: { gst_number },
+      })
       .then((res) => {
         toast.success("Item group deleted successfully");
         router.push("/master/group");
@@ -75,8 +80,10 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async () => {
-  const itemGroups = await prisma().group.findMany({
+export const getServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+  const gst_number = session?.company?.gst_number?.toLowerCase() || null;
+  const itemGroups = await prisma(gst_number).group.findMany({
     orderBy: [
       {
         updated_at: "desc",
@@ -85,6 +92,7 @@ export const getServerSideProps = async () => {
   });
   return {
     props: {
+      gst_number: gst_number || null,
       itemGroups: JSON.stringify(itemGroups),
     },
   };
