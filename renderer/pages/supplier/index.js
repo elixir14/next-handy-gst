@@ -1,17 +1,20 @@
 import React from "react";
-import Admin from "../../layouts/Admin";
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import Table from "components/Table/Table";
-import router from "next/router";
 import axios from "axios";
+import router from "next/router";
 import toast from "react-hot-toast";
+import { getSession } from "next-auth/react";
+
 import prisma from "lib/prisma";
 
-const index = ({ suppliers }) => {
+import Admin from "layouts/Admin";
+import Table from "components/Table/Table";
+import Card from "components/Card/Card.js";
+import GridItem from "components/Grid/GridItem.js";
+import CardBody from "components/Card/CardBody.js";
+import Button from "components/CustomButtons/Button.js";
+import GridContainer from "components/Grid/GridContainer.js";
+
+const index = ({ suppliers, gst_number }) => {
   const supplierList = JSON.parse(suppliers);
 
   const headerData = [
@@ -32,7 +35,9 @@ const index = ({ suppliers }) => {
 
   const deleteEntry = (id) => {
     axios
-      .delete(`/api/supplier/delete/${id}`)
+      .delete(`/api/supplier/delete/${id}`, {
+        data: { gst_number },
+      })
       .then((res) => {
         toast.success("Supplier deleted successfully");
         router.push("/supplier");
@@ -76,8 +81,10 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async () => {
-  const suppliers = await prisma().supplier.findMany({
+export const getServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+  const gst_number = session?.company?.gst_number?.toLowerCase() || null;
+  const suppliers = await prisma(gst_number).supplier.findMany({
     orderBy: [
       {
         updated_at: "desc",
@@ -86,6 +93,7 @@ export const getServerSideProps = async () => {
   });
   return {
     props: {
+      gst_number: gst_number || null,
       suppliers: JSON.stringify(suppliers),
     },
   };

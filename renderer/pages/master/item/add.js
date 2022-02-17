@@ -1,22 +1,26 @@
 import React from "react";
-import router from "next/router";
-import ItemForm from "components/Form/ItemForm";
-import Admin from "layouts/Admin";
-import { useForm } from "react-hook-form";
 import axios from "axios";
+import router from "next/router";
 import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { getSession } from "next-auth/react";
+
 import { itemGroups, units } from "lib/masters";
+
+import Admin from "layouts/Admin";
+import ItemForm from "components/Form/ItemForm";
 
 const create = (props) => {
   const { setError } = useForm();
 
+  const gst_number = props.gst_number;
   const groupList = JSON.parse(props.groupList);
   const unitList = JSON.parse(props.unitList);
 
   const handleFormSave = (data) => {
     const payload = data;
     axios
-      .post("/api/item/add", payload)
+      .post("/api/item/add", { payload, gst_number })
       .then((res) => {
         toast.success("Item created successfully");
         router.push("/master/item");
@@ -43,12 +47,15 @@ create.auth = true;
 
 export default create;
 
-export async function getServerSideProps() {
-  const groupList = await itemGroups();
-  const unitList = await units();
+export async function getServerSideProps(ctx) {
+  const session = await getSession(ctx);
+  const gst_number = session?.company?.gst_number?.toLowerCase() || null;
+  const groupList = await itemGroups(gst_number);
+  const unitList = await units(gst_number);
 
   return {
     props: {
+      gst_number: gst_number || null,
       groupList: JSON.stringify(groupList),
       unitList: JSON.stringify(unitList),
     },

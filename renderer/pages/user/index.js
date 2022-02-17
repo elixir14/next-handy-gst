@@ -1,17 +1,20 @@
 import React from "react";
-import Admin from "../../layouts/Admin";
+import router from "next/router";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { getSession } from "next-auth/react";
+
+import prisma from "lib/prisma";
+
+import Admin from "layouts/Admin";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import Table from "components/Table/Table";
-import router from "next/router";
-import axios from "axios";
-import toast from "react-hot-toast";
-import prisma from "lib/prisma";
 
-const index = ({ users }) => {
+const index = ({ users, gst_number }) => {
   const userList = JSON.parse(users);
 
   const headerData = [
@@ -30,7 +33,9 @@ const index = ({ users }) => {
 
   const deleteEntry = (id) => {
     axios
-      .delete(`/api/user/delete/${id}`)
+      .delete(`/api/user/delete/${id}`, {
+        data: { gst_number },
+      })
       .then((res) => {
         toast.success("User deleted successfully");
         router.push("/user");
@@ -71,8 +76,17 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async () => {
-  const users = await prisma().user.findMany({
+export const getServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+  const gst_number = session?.company?.gst_number?.toLowerCase() || null;
+  const users = await prisma(gst_number).user.findMany({
+    where: {
+      NOT: {
+        email: {
+          endsWith: session?.user?.email,
+        },
+      },
+    },
     orderBy: [
       {
         updated_at: "desc",
@@ -81,6 +95,7 @@ export const getServerSideProps = async () => {
   });
   return {
     props: {
+      gst_number: gst_number || null,
       users: JSON.stringify(users),
     },
   };

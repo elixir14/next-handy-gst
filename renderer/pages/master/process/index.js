@@ -11,8 +11,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { STATUS } from "lib/constants";
 import prisma from "lib/prisma";
+import { getSession } from "next-auth/react";
 
-const index = ({ processes }) => {
+const index = ({ processes, gst_number }) => {
   const processList = JSON.parse(processes);
 
   const headerData = [
@@ -30,7 +31,9 @@ const index = ({ processes }) => {
 
   const deleteEntry = (id) => {
     axios
-      .delete(`/api/process/delete/${id}`)
+      .delete(`/api/process/delete/${id}`, {
+        data: { gst_number },
+      })
       .then((res) => {
         toast.success("Process deleted successfully");
         router.push("/master/process");
@@ -76,8 +79,10 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async () => {
-  const processes = await prisma().process.findMany({
+export const getServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+  const gst_number = session?.company?.gst_number?.toLowerCase() || null;
+  const processes = await prisma(gst_number).process.findMany({
     orderBy: [
       {
         updated_at: "desc",
@@ -86,6 +91,7 @@ export const getServerSideProps = async () => {
   });
   return {
     props: {
+      gst_number: gst_number || null,
       processes: JSON.stringify(processes),
     },
   };

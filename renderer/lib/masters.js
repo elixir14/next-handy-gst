@@ -1,45 +1,45 @@
 import prisma from "./prisma";
 
-export const cities = async () => {
-  return await prisma().city.findMany();
+export const cities = async (schema) => {
+  return await prisma(schema).city.findMany();
 };
 
-export const states = async () => {
-  return await prisma().state.findMany();
+export const states = async (schema) => {
+  return await prisma(schema).state.findMany();
 };
 
-export const itemGroups = async () => {
-  return await prisma().group.findMany();
+export const itemGroups = async (schema) => {
+  return await prisma(schema).group.findMany();
 };
 
-export const units = async () => {
-  return await prisma().unit.findMany();
+export const units = async (schema) => {
+  return await prisma(schema).unit.findMany();
 };
 
-export const processes = async () => {
-  return await prisma().process.findMany();
+export const processes = async (schema) => {
+  return await prisma(schema).process.findMany();
 };
 
-export const suppliers = async () => {
-  return await prisma().supplier.findMany();
+export const suppliers = async (schema) => {
+  return await prisma(schema).supplier.findMany();
 };
 
-export const transports = async () => {
-  return await prisma().transport.findMany();
+export const transports = async (schema) => {
+  return await prisma(schema).transport.findMany();
 };
 
-export const items = async () => {
-  return await prisma().item.findMany();
+export const items = async (schema) => {
+  return await prisma(schema).item.findMany();
 };
 
-export const outward_chalaan_item = async () => {
-  return await prisma().outward_chalaan_item.findMany();
+export const outward_chalaan_item = async (schema) => {
+  return await prisma(schema).outward_chalaan_item.findMany();
 };
 
-export const settings = async () => {
-  return await prisma().settings.findMany();
+export const settings = async (schema) => {
+  return await prisma(schema).settings.findMany();
 };
 
-export const companies = async () => {
-  return await prisma().company.findMany();
+export const companies = async (schema) => {
+  return await prisma(schema).company.findMany();
 };

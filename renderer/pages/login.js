@@ -175,8 +175,7 @@ const Login = (props) => {
 export default Login;
 
 export async function getServerSideProps() {
-  const companyList = await companies();
-
+  const companyList = await companies("public");
   return {
     props: {
       companyList: JSON.stringify(companyList),
