@@ -177,8 +177,13 @@ const OutwardChalaanForm = ({
                     outward_chalaan?.number
                       ? outward_chalaan?.number
                       : `${setting?.prefix?.value ?? ""}${
-                          setting?.outward_challan_next_number?.value ?? ""
-                        }${setting?.suffix?.value ?? ""}`
+                          setting?.outward_challan_next_number?.value > 4
+                            ? String("0000" + (parseInt(ele.value) + 1)).slice(
+                                -4
+                              )
+                            : "0001"
+                        }
+                        ${setting?.suffix?.value ?? ""}`
                   }
                   control={control}
                   formControlProps={{
@@ -230,7 +235,7 @@ const OutwardChalaanForm = ({
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  number={true}
                 />
               </GridItem>
             </GridContainer>

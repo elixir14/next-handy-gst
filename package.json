@@ -10,7 +10,8 @@
     "build": "nextron build",
     "postinstall": "electron-builder install-app-deps",
     "schema": "sudo -u postgres psql -d next-handy-gst -c 'CREATE SCHEMA IF NOT EXISTS homee AUTHORIZATION postgres;'",
-    "schema:file": "sudo -u postgres psql -f renderer/prisma/schema.sql -v v1=${npm_config_name}"
+    "schema:file": "sudo -u postgres psql -f renderer/prisma/schema.sql -v v1=${npm_config_name}",
+    "builder":"electron-builder"
   },
   "prisma": {
     "seed": "node renderer/prisma/seed.js"

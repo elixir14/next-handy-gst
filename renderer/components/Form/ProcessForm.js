@@ -100,6 +100,7 @@ const ProcessForm = ({ process, handleFormSave }) => {
                   formControlProps={{
                     fullWidth: true,
                   }}
+                  number={true}
                 />
               </GridItem>
               <GridItem xs={12} sm={12} md={6}>

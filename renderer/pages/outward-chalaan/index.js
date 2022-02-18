@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import router from "next/router";
 import toast from "react-hot-toast";
@@ -13,9 +13,11 @@ import GridItem from "components/Grid/GridItem.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import DummyChalaan from "@/components/DummyChalaan";
 
 const index = ({ outwardChalaans, gst_number }) => {
   const outwardChalaanList = JSON.parse(outwardChalaans);
+  const [open, setOpen] = useState(false);
 
   const headerData = [
     { id: "id", name: "Id" },
@@ -53,6 +55,9 @@ const index = ({ outwardChalaans, gst_number }) => {
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardBody>
+            <Button color="primary" onClick={() => setOpen(true)}>
+              Add Dummy Chalaan
+            </Button>
             <Button
               color="primary"
               onClick={() => router.push(`/outward-chalaan/add`)}
@@ -67,6 +72,7 @@ const index = ({ outwardChalaans, gst_number }) => {
               deleteEntry={deleteEntry}
               searchKey="number"
             />
+            <DummyChalaan open={open} setOpen={setOpen} />
           </CardBody>
         </Card>
       </GridItem>
