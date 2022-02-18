@@ -3,9 +3,9 @@ import {
   primaryColor,
   dangerColor,
   grayColor,
-} from "assets/jss/nextjs-material-dashboard.js";
-import tooltipStyle from "assets/jss/nextjs-material-dashboard/tooltipStyle.js";
-import checkboxAdnRadioStyle from "assets/jss/nextjs-material-dashboard/checkboxAdnRadioStyle.js";
+} from "renderer/assetsjss/nextjs-material-dashboard.js";
+import tooltipStyle from "renderer/assetsjss/nextjs-material-dashboard/tooltipStyle.js";
+import checkboxAdnRadioStyle from "renderer/assetsjss/nextjs-material-dashboard/checkboxAdnRadioStyle.js";
 const tasksStyle = {
   ...tooltipStyle,
   ...checkboxAdnRadioStyle,

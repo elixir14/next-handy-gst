@@ -1,7 +1,7 @@
 import React from "react";
 import router from "next/router";
-import StateForm from "components/Form/StateForm";
-import Admin from "layouts/Admin";
+import StateForm from "renderer/components/Form/StateForm";
+import Admin from "renderer/layoutsAdmin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";

@@ -6,14 +6,14 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
-import Navbar from "components/Navbars/Navbar.js";
-import Sidebar from "components/Sidebar/Sidebar.js";
+import Navbar from "renderer/components/Navbars/Navbar.js";
+import Sidebar from "renderer/components/Sidebar/Sidebar.js";
 
 import routes from "routes.js";
 
-import styles from "assets/jss/nextjs-material-dashboard/layouts/adminStyle.js";
+import styles from "renderer/assetsjss/nextjs-material-dashboard/layouts/adminStyle.js";
 
-import logo from "assets/img/reactlogo.png";
+import logo from "renderer/assetsimg/reactlogo.png";
 
 let ps;
 
@@ -67,11 +67,7 @@ export default function Admin({ children, ...rest }) {
         {...rest}
       />
       <div className={classes.mainPanel} ref={mainPanel}>
-        <Navbar
-          routes={routes}
-          handleDrawerToggle={handleDrawerToggle}
-          {...rest}
-        />
+        <Navbar routes={routes} handleDrawerToggle={handleDrawerToggle} {...rest} />
         <div className={classes.content}>
           <div className={classes.container}>{children}</div>
         </div>

@@ -14,9 +14,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Icon from "@material-ui/core/Icon";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 // core components
-import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.js";
+import AdminNavbarLinks from "renderer/components/Navbars/AdminNavbarLinks.js";
 
-import styles from "assets/jss/nextjs-material-dashboard/components/sidebarStyle.js";
+import styles from "renderer/assetsjss/nextjs-material-dashboard/components/sidebarStyle.js";
 
 export default function Sidebar(props) {
   // used for checking current route
@@ -45,8 +45,7 @@ export default function Sidebar(props) {
       });
     }
     const whiteFontClasses = classNames({
-      [" " + classes.whiteFont]:
-        activeRoute(route.path) || route.path === "/upgrade-to-pro",
+      [" " + classes.whiteFont]: activeRoute(route.path) || route.path === "/upgrade-to-pro",
     });
 
     const InnerItem = () => (
@@ -90,18 +89,12 @@ export default function Sidebar(props) {
     return (
       <>
         {Array.isArray(route?.children) ? (
-          <div
-            className={activePro + classes.item}
-            onClick={() => setIsShow(!isShow)}
-          >
+          <div className={activePro + classes.item} onClick={() => setIsShow(!isShow)}>
             <InnerItem />
           </div>
         ) : (
           <Link href={`${concatPath ?? ""}${route.path}`}>
-            <a
-              className={activePro + classes.item}
-              style={{ paddingLeft: child && "1rem" }}
-            >
+            <a className={activePro + classes.item} style={{ paddingLeft: child && "1rem" }}>
               <InnerItem />
             </a>
           </Link>
@@ -189,14 +182,7 @@ export default function Sidebar(props) {
 Sidebar.propTypes = {
   rtlActive: PropTypes.bool,
   handleDrawerToggle: PropTypes.func,
-  bgColor: PropTypes.oneOf([
-    "white",
-    "purple",
-    "blue",
-    "green",
-    "orange",
-    "red",
-  ]),
+  bgColor: PropTypes.oneOf(["white", "purple", "blue", "green", "orange", "red"]),
   logo: PropTypes.string,
   image: PropTypes.string,
   logoText: PropTypes.string,

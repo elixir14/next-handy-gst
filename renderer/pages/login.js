@@ -3,22 +3,22 @@ import Link from "next/link";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
-import PasswordInput from "components/PasswordInput/PasswordInput.js";
-import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
+import GridItem from "renderer/components/Grid/GridItem.js";
+import GridContainer from "renderer/components/Grid/GridContainer.js";
+import CustomInput from "renderer/components/CustomInput/CustomInput.js";
+import PasswordInput from "renderer/components/PasswordInput/PasswordInput.js";
+import Button from "renderer/components/CustomButtons/Button.js";
+import Card from "renderer/components/Card/Card.js";
+import CardHeader from "renderer/components/Card/CardHeader.js";
+import CardBody from "renderer/components/Card/CardBody.js";
+import CardFooter from "renderer/components/Card/CardFooter.js";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import router from "next/router";
 import toast from "react-hot-toast";
 import Primary from "@/components/Typography/Primary";
 import CustomDropDown from "@/components/CustomDropDown/CustomDropDown";
-import { companies } from "lib/masters";
+import { companies } from "renderer/libmasters";
 
 const styles = {
   cardCategoryWhite: {
@@ -66,9 +66,7 @@ const Login = (props) => {
   const { handleSubmit, control } = useForm();
 
   const onSubmit = async (data) => {
-    const companyData = companyList.find(
-      (company) => company.id === data.company
-    );
+    const companyData = companyList.find((company) => company.id === data.company);
 
     const res = await signIn("credentials", {
       redirect: false,
@@ -97,9 +95,7 @@ const Login = (props) => {
         <Card>
           <CardHeader color="primary">
             <h4 className={classes.cardTitleWhite}>Welcome Back</h4>
-            <p className={classes.cardCategoryWhite}>
-              Please Login To Continue
-            </p>
+            <p className={classes.cardCategoryWhite}>Please Login To Continue</p>
           </CardHeader>
           <CardBody>
             <GridContainer>

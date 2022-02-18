@@ -1,15 +1,15 @@
 import React from "react";
-import Admin from "layouts/Admin";
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import Table from "components/Table/Table";
+import Admin from "renderer/layoutsAdmin";
+import GridItem from "renderer/components/Grid/GridItem.js";
+import GridContainer from "renderer/components/Grid/GridContainer.js";
+import Button from "renderer/components/CustomButtons/Button.js";
+import Card from "renderer/components/Card/Card.js";
+import CardBody from "renderer/components/Card/CardBody.js";
+import Table from "renderer/components/Table/Table";
 import router from "next/router";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { states } from "lib/masters";
+import { states } from "renderer/libmasters";
 
 const index = (props) => {
   const cityList = JSON.parse(props.cities);
@@ -42,10 +42,7 @@ const index = (props) => {
         router.push("/master/city");
       })
       .catch((error) => {
-        console.log(
-          "🚀 ~ file: index.js ~ line 36 ~ deleteEntry ~ error",
-          error
-        );
+        console.log("🚀 ~ file: index.js ~ line 36 ~ deleteEntry ~ error", error);
       });
   };
 
@@ -54,10 +51,7 @@ const index = (props) => {
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardBody>
-            <Button
-              color="primary"
-              onClick={() => router.push(`/master/city/add`)}
-            >
+            <Button color="primary" onClick={() => router.push(`/master/city/add`)}>
               Add City
             </Button>
             <Table

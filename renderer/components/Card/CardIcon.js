@@ -8,7 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
 
 // core components
-import styles from "assets/jss/nextjs-material-dashboard/components/cardIconStyle.js";
+import styles from "renderer/assetsjss/nextjs-material-dashboard/components/cardIconStyle.js";
 
 export default function CardIcon(props) {
   const useStyles = makeStyles(styles);
@@ -28,14 +28,6 @@ export default function CardIcon(props) {
 
 CardIcon.propTypes = {
   className: PropTypes.string,
-  color: PropTypes.oneOf([
-    "warning",
-    "success",
-    "danger",
-    "info",
-    "primary",
-    "rose",
-    "dark",
-  ]),
+  color: PropTypes.oneOf(["warning", "success", "danger", "info", "primary", "rose", "dark"]),
   children: PropTypes.node,
 };

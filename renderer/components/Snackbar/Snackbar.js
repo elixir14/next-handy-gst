@@ -8,7 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 // @material-ui/icons
 import Close from "@material-ui/icons/Close";
 // core components
-import styles from "assets/jss/nextjs-material-dashboard/components/snackbarContentStyle.js";
+import styles from "renderer/assetsjss/nextjs-material-dashboard/components/snackbarContentStyle.js";
 
 export default function Snackbar(props) {
   const useStyles = makeStyles(styles);
@@ -36,11 +36,7 @@ export default function Snackbar(props) {
       anchorOrigin={{
         vertical: place.indexOf("t") === -1 ? "bottom" : "top",
         horizontal:
-          place.indexOf("l") !== -1
-            ? "left"
-            : place.indexOf("c") !== -1
-            ? "center"
-            : "right",
+          place.indexOf("l") !== -1 ? "left" : place.indexOf("c") !== -1 ? "center" : "right",
       }}
       open={open}
       message={

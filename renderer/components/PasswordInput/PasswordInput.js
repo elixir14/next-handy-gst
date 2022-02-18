@@ -14,7 +14,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import VisibleIcon from "@material-ui/icons/Visibility";
 import VisibleOffIcon from "@material-ui/icons/VisibilityOff";
 
-import styles from "assets/jss/nextjs-material-dashboard/components/customInputStyle.js";
+import styles from "renderer/assetsjss/nextjs-material-dashboard/components/customInputStyle.js";
 
 const useStyles = makeStyles(styles);
 
@@ -59,11 +59,7 @@ export default function PasswordInput(props) {
       className={formControlProps.className + " " + classes.formControl}
     >
       {labelText !== undefined ? (
-        <InputLabel
-          className={classes.labelRoot + labelClasses}
-          htmlFor={id}
-          {...labelProps}
-        >
+        <InputLabel className={classes.labelRoot + labelClasses} htmlFor={id} {...labelProps}>
           {labelText}
         </InputLabel>
       ) : null}
@@ -80,9 +76,7 @@ export default function PasswordInput(props) {
         id={id}
         endAdornment={
           <InputAdornment onClick={changeVisibility}>
-            <IconButton>
-              {isPasswordVisible ? <VisibleIcon /> : <VisibleOffIcon />}
-            </IconButton>
+            <IconButton>{isPasswordVisible ? <VisibleIcon /> : <VisibleOffIcon />}</IconButton>
           </InputAdornment>
         }
         {...inputProps}

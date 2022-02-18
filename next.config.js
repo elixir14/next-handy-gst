@@ -7,6 +7,10 @@ const path = require("path");
 
 module.exports = withPlugins([[withSass], [withImages], [withCSS]], {
   webpack5: false,
+  mainSrcDir: "main",
+  // specify an alternate renderer src directory, defaults to 'renderer'
+  rendererSrcDir: "renderer",
+
   webpack(config, options) {
     config.resolve.modules.push(path.resolve("./"));
     return config;

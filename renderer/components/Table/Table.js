@@ -8,8 +8,8 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 // core components
-import Button from "components/CustomButtons/Button.js";
-import styles from "assets/jss/nextjs-material-dashboard/components/tableStyle.js";
+import Button from "renderer/components/CustomButtons/Button.js";
+import styles from "renderer/assetsjss/nextjs-material-dashboard/components/tableStyle.js";
 import { TablePagination } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 
@@ -36,8 +36,7 @@ export default function CustomTable(props) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searched, setSearched] = useState("");
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - dataList.length) : 0;
 
   useEffect(() => {
     setPage(0);
@@ -122,10 +121,7 @@ export default function CustomTable(props) {
         ) : null}
         <TableBody>
           {(rowsPerPage > 0
-            ? dataList.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
+            ? dataList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : dataList
           ).map((list, key) => (
             <TableRow key={key} className={classes.tableBodyRow}>
@@ -144,11 +140,7 @@ export default function CustomTable(props) {
                           </Button>
                         )}
                         {isDelete && (
-                          <Button
-                            size="sm"
-                            color="rose"
-                            onClick={() => deleteEntry(list.id)}
-                          >
+                          <Button size="sm" color="rose" onClick={() => deleteEntry(list.id)}>
                             Delete
                           </Button>
                         )}
@@ -158,8 +150,7 @@ export default function CustomTable(props) {
                         {l === "id"
                           ? ""
                           : l === selector
-                          ? selectorData.filter((s) => s.id === list[l])[0]
-                              ?.name
+                          ? selectorData.filter((s) => s.id === list[l])[0]?.name
                           : list[l]}
                       </>
                     )}
@@ -168,9 +159,7 @@ export default function CustomTable(props) {
               })}
             </TableRow>
           ))}
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 64 * emptyRows }}></TableRow>
-          )}
+          {emptyRows > 0 && <TableRow style={{ height: 64 * emptyRows }}></TableRow>}
         </TableBody>
       </Table>
       {pagination && (

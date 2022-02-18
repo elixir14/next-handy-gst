@@ -1,10 +1,10 @@
 import React from "react";
 import router from "next/router";
-import SupplierForm from "components/Form/SupplierForm";
-import Admin from "layouts/Admin";
+import SupplierForm from "renderer/components/Form/SupplierForm";
+import Admin from "renderer/layoutsAdmin";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { cities, states } from "lib/masters";
+import { cities, states } from "renderer/libmasters";
 
 const create = (props) => {
   const cityList = JSON.parse(props.cityList);
@@ -32,20 +32,11 @@ const create = (props) => {
         router.push("/supplier");
       })
       .catch((error) => {
-        console.log(
-          "🚀 ~ file: add.js ~ line 21 ~ handleFormSave ~ error",
-          error
-        );
+        console.log("🚀 ~ file: add.js ~ line 21 ~ handleFormSave ~ error", error);
       });
   };
 
-  return (
-    <SupplierForm
-      handleFormSave={handleFormSave}
-      stateList={stateList}
-      cityList={cityList}
-    />
-  );
+  return <SupplierForm handleFormSave={handleFormSave} stateList={stateList} cityList={cityList} />;
 };
 
 create.layout = Admin;

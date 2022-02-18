@@ -11,10 +11,10 @@ import Poppers from "@material-ui/core/Popper";
 import Divider from "@material-ui/core/Divider";
 // @material-ui/icons
 import Person from "@material-ui/icons/Person";
-import Button from "components/CustomButtons/Button.js";
-import useWindowSize from "components/Hooks/useWindowSize.js";
+import Button from "renderer/components/CustomButtons/Button.js";
+import useWindowSize from "renderer/components/Hooks/useWindowSize.js";
 
-import styles from "assets/jss/nextjs-material-dashboard/components/headerLinksStyle.js";
+import styles from "renderer/assetsjss/nextjs-material-dashboard/components/headerLinksStyle.js";
 import { signOut } from "next-auth/react";
 
 export default function AdminNavbarLinks() {
@@ -66,40 +66,26 @@ export default function AdminNavbarLinks() {
           anchorEl={openProfile}
           transition
           disablePortal
-          className={
-            classNames({ [classes.popperClose]: !openProfile }) +
-            " " +
-            classes.popperNav
-          }
+          className={classNames({ [classes.popperClose]: !openProfile }) + " " + classes.popperNav}
         >
           {({ TransitionProps, placement }) => (
             <Grow
               {...TransitionProps}
               id="profile-menu-list-grow"
               style={{
-                transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom",
+                transformOrigin: placement === "bottom" ? "center top" : "center bottom",
               }}
             >
               <Paper>
                 <MenuList role="menu">
-                  <MenuItem
-                    onClick={handleCloseProfile}
-                    className={classes.dropdownItem}
-                  >
+                  <MenuItem onClick={handleCloseProfile} className={classes.dropdownItem}>
                     Profile
                   </MenuItem>
-                  <MenuItem
-                    onClick={handleCloseProfile}
-                    className={classes.dropdownItem}
-                  >
+                  <MenuItem onClick={handleCloseProfile} className={classes.dropdownItem}>
                     Settings
                   </MenuItem>
                   <Divider light />
-                  <MenuItem
-                    onClick={handleCloseProfile}
-                    className={classes.dropdownItem}
-                  >
+                  <MenuItem onClick={handleCloseProfile} className={classes.dropdownItem}>
                     Logout
                   </MenuItem>
                 </MenuList>

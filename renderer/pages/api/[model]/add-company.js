@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import prisma from "lib/prisma";
+import prisma from "renderer/libprisma";
 var child_process = require("child_process");
 
 export default async function handler(req, res) {
@@ -18,9 +18,7 @@ export default async function handler(req, res) {
     },
   });
   if (existingGST) {
-    res
-      .status(422)
-      .json({ message: "Company already register with this GST number" });
+    res.status(422).json({ message: "Company already register with this GST number" });
     return;
   }
   child_process.exec(
@@ -40,9 +38,7 @@ export default async function handler(req, res) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       // The .code property can be accessed in a type-safe manner
       if (e.code === "P2002") {
-        res
-          .status(400)
-          .json({ key: "email", message: "Email already registered" });
+        res.status(400).json({ key: "email", message: "Email already registered" });
       }
     }
   }

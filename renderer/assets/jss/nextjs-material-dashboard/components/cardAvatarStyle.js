@@ -1,4 +1,4 @@
-import { hexToRgb, blackColor } from "assets/jss/nextjs-material-dashboard.js";
+import { hexToRgb, blackColor } from "renderer/assetsjss/nextjs-material-dashboard.js";
 
 const cardAvatarStyle = {
   cardAvatar: {

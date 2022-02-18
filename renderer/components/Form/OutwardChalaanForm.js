@@ -2,15 +2,15 @@ import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
-import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
-import Table from "components/Table/Table";
+import GridItem from "renderer/components/Grid/GridItem.js";
+import GridContainer from "renderer/components/Grid/GridContainer.js";
+import CustomInput from "renderer/components/CustomInput/CustomInput.js";
+import Button from "renderer/components/CustomButtons/Button.js";
+import Card from "renderer/components/Card/Card.js";
+import CardHeader from "renderer/components/Card/CardHeader.js";
+import CardBody from "renderer/components/Card/CardBody.js";
+import CardFooter from "renderer/components/Card/CardFooter.js";
+import Table from "renderer/components/Table/Table";
 import router from "next/router";
 import AddCircleSharpIcon from "@material-ui/icons/AddCircleSharp";
 import { useForm } from "react-hook-form";
@@ -86,8 +86,7 @@ const OutwardChalaanForm = ({
 
   const isEdit = !!outward_chalaan;
 
-  const chalaan_date =
-    (outward_chalaan?.date && new Date(outward_chalaan?.date)) || new Date();
+  const chalaan_date = (outward_chalaan?.date && new Date(outward_chalaan?.date)) || new Date();
 
   const headerData = [
     { id: "id", name: "Id" },
@@ -100,18 +99,13 @@ const OutwardChalaanForm = ({
   ];
 
   const handleAddItem = async (data) => {
-    setChalaanItems([
-      ...chalaanItems,
-      { ...data, id: `item_${chalaanItems.length}` },
-    ]);
+    setChalaanItems([...chalaanItems, { ...data, id: `item_${chalaanItems.length}` }]);
     setTempItems([...tempItems, { ...data, id: `item_${tempItems.length}` }]);
     itemReset();
   };
 
   const handleItemEdit = (data) => {
-    Object.keys(data).map((key) =>
-      setItemValue(key, data[key], { shouldValidate: true })
-    );
+    Object.keys(data).map((key) => setItemValue(key, data[key], { shouldValidate: true }));
 
     const items = chalaanItems.filter((item) => item.id !== data.id);
     setChalaanItems(items);
@@ -145,9 +139,7 @@ const OutwardChalaanForm = ({
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>
-              {isEdit ? "Edit Chalaan" : "Add Chalaan"}
-            </h4>
+            <h4 className={classes.cardTitleWhite}>{isEdit ? "Edit Chalaan" : "Add Chalaan"}</h4>
           </CardHeader>
           <CardBody>
             <GridContainer>
@@ -509,10 +501,7 @@ const OutwardChalaanForm = ({
             </GridContainer>
           </CardBody>
           <CardFooter plain>
-            <Button
-              color="rose"
-              onClick={() => router.push("/outward-chalaan")}
-            >
+            <Button color="rose" onClick={() => router.push("/outward-chalaan")}>
               Cancel
             </Button>
             <Button color="primary" onClick={handleSubmit(handleFormSave)}>

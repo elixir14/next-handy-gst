@@ -1,11 +1,11 @@
 import React from "react";
 import Admin from "../../layouts/Admin";
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
-import CardBody from "components/Card/CardBody.js";
-import Table from "components/Table/Table";
+import GridItem from "renderer/components/Grid/GridItem.js";
+import GridContainer from "renderer/components/Grid/GridContainer.js";
+import Button from "renderer/components/CustomButtons/Button.js";
+import Card from "renderer/components/Card/Card.js";
+import CardBody from "renderer/components/Card/CardBody.js";
+import Table from "renderer/components/Table/Table";
 import router from "next/router";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -35,10 +35,7 @@ const index = ({ users }) => {
         router.push("/user");
       })
       .catch((error) => {
-        console.log(
-          "🚀 ~ file: index.js ~ line 36 ~ deleteEntry ~ error",
-          error
-        );
+        console.log("🚀 ~ file: index.js ~ line 36 ~ deleteEntry ~ error", error);
       });
   };
 

@@ -1,7 +1,7 @@
 import React from "react";
 import router from "next/router";
-import ProcessForm from "components/Form/ProcessForm";
-import Admin from "layouts/Admin";
+import ProcessForm from "renderer/components/Form/ProcessForm";
+import Admin from "renderer/layoutsAdmin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";

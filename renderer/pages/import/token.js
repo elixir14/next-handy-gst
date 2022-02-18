@@ -2,14 +2,14 @@ import React from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
-import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
+import GridItem from "renderer/components/Grid/GridItem.js";
+import GridContainer from "renderer/components/Grid/GridContainer.js";
+import CustomInput from "renderer/components/CustomInput/CustomInput.js";
+import Button from "renderer/components/CustomButtons/Button.js";
+import Card from "renderer/components/Card/Card.js";
+import CardHeader from "renderer/components/Card/CardHeader.js";
+import CardBody from "renderer/components/Card/CardBody.js";
+import CardFooter from "renderer/components/Card/CardFooter.js";
 import { useForm } from "react-hook-form";
 import router from "next/router";
 import axios from "axios";

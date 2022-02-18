@@ -1,7 +1,7 @@
 import React from "react";
 import router from "next/router";
-import UserForm from "components/Form/UserForm";
-import Admin from "layouts/Admin";
+import UserForm from "renderer/components/Form/UserForm";
+import Admin from "renderer/layoutsAdmin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -42,9 +42,7 @@ const edit = (props) => {
       });
     }
   };
-  return (
-    <UserForm user={user} handleFormSave={handleFormEdit} onError={onError} />
-  );
+  return <UserForm user={user} handleFormSave={handleFormEdit} onError={onError} />;
 };
 
 edit.layout = Admin;

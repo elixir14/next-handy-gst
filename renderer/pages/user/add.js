@@ -1,11 +1,11 @@
 import React from "react";
 import router from "next/router";
-import UserForm from "components/Form/UserForm";
-import Admin from "layouts/Admin";
+import UserForm from "renderer/components/Form/UserForm";
+import Admin from "renderer/layoutsAdmin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { hashPassword } from "lib/auth";
+import { hashPassword } from "renderer/libauth";
 
 const create = () => {
   const { setError } = useForm();

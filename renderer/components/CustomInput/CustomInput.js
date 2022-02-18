@@ -7,22 +7,14 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
 // core components
-import styles from "assets/jss/nextjs-material-dashboard/components/customInputStyle.js";
+import styles from "renderer/assetsjss/nextjs-material-dashboard/components/customInputStyle.js";
 import { useController } from "react-hook-form";
-import { allowOnlyNumber } from "lib/helper";
+import { allowOnlyNumber } from "renderer/libhelper";
 
 const useStyles = makeStyles(styles);
 export default function CustomInput(props) {
   const classes = useStyles();
-  const {
-    formControlProps,
-    labelText,
-    id,
-    labelProps,
-    inputProps,
-    success,
-    number,
-  } = props;
+  const { formControlProps, labelText, id, labelProps, inputProps, success, number } = props;
   const { field, fieldState } = useController(props);
   const { error } = fieldState;
 
@@ -44,11 +36,7 @@ export default function CustomInput(props) {
       className={formControlProps.className + " " + classes.formControl}
     >
       {labelText !== undefined ? (
-        <InputLabel
-          className={classes.labelRoot + labelClasses}
-          htmlFor={id}
-          {...labelProps}
-        >
+        <InputLabel className={classes.labelRoot + labelClasses} htmlFor={id} {...labelProps}>
           {labelText}
         </InputLabel>
       ) : null}

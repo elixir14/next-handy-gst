@@ -2,19 +2,19 @@ import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
-import Button from "components/CustomButtons/Button.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
-import CustomDropDown from "components/CustomDropDown/CustomDropDown.js";
+import GridItem from "renderer/components/Grid/GridItem.js";
+import GridContainer from "renderer/components/Grid/GridContainer.js";
+import CustomInput from "renderer/components/CustomInput/CustomInput.js";
+import Button from "renderer/components/CustomButtons/Button.js";
+import Card from "renderer/components/Card/Card.js";
+import CardHeader from "renderer/components/Card/CardHeader.js";
+import CardBody from "renderer/components/Card/CardBody.js";
+import CardFooter from "renderer/components/Card/CardFooter.js";
+import CustomDropDown from "renderer/components/CustomDropDown/CustomDropDown.js";
 import router from "next/router";
 import { useForm } from "react-hook-form";
 import PasswordInput from "../PasswordInput/PasswordInput";
-import { USER_TYPE } from "lib/constants";
+import { USER_TYPE } from "renderer/libconstants";
 
 const styles = {
   cardCategoryWhite: {
@@ -67,9 +67,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
       <GridItem xs={12} sm={12} md={8}>
         <Card>
           <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>
-              {isEdit ? "Edit User" : "Add User"}
-            </h4>
+            <h4 className={classes.cardTitleWhite}>{isEdit ? "Edit User" : "Add User"}</h4>
           </CardHeader>
           <CardBody>
             <GridContainer>
@@ -211,8 +209,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
                       }}
                       rules={{
                         validate: (value) =>
-                          value === getValues("password") ||
-                          "The passwords do not match",
+                          value === getValues("password") || "The passwords do not match",
                       }}
                     />
                   </GridItem>
@@ -224,10 +221,7 @@ const UserForm = ({ user, handleFormSave, onError }) => {
             <Button color="rose" onClick={() => router.push("/user")}>
               Cancel
             </Button>
-            <Button
-              color="primary"
-              onClick={handleSubmit(handleFormSave, onError)}
-            >
+            <Button color="primary" onClick={handleSubmit(handleFormSave, onError)}>
               {isEdit ? "Update" : "Add"}
             </Button>
           </CardFooter>

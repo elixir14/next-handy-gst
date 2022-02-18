@@ -1,10 +1,10 @@
 import React from "react";
 import router from "next/router";
-import ItemForm from "components/Form/ItemForm";
-import Admin from "layouts/Admin";
+import ItemForm from "renderer/components/Form/ItemForm";
+import Admin from "renderer/layoutsAdmin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { itemGroups, units } from "lib/masters";
+import { itemGroups, units } from "renderer/libmasters";
 import toast from "react-hot-toast";
 
 const edit = (props) => {

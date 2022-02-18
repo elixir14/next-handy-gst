@@ -1,7 +1,7 @@
 import React from "react";
 import router from "next/router";
-import ItemGroupForm from "components/Form/ItemGroupForm";
-import Admin from "layouts/Admin";
+import ItemGroupForm from "renderer/components/Form/ItemGroupForm";
+import Admin from "renderer/layoutsAdmin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -26,9 +26,7 @@ const edit = (props) => {
       });
   };
 
-  return (
-    <ItemGroupForm itemGroup={itemGroup} handleFormSave={handleFormEdit} />
-  );
+  return <ItemGroupForm itemGroup={itemGroup} handleFormSave={handleFormEdit} />;
 };
 
 edit.layout = Admin;

@@ -16,7 +16,7 @@ import {
   primaryColor,
   warningColor,
   hexToRgb,
-} from "assets/jss/nextjs-material-dashboard.js";
+} from "renderer/assetsjss/nextjs-material-dashboard.js";
 
 const snackbarContentStyle = {
   root: {

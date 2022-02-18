@@ -17,29 +17,29 @@ import BugReport from "@material-ui/icons/BugReport";
 import Code from "@material-ui/icons/Code";
 import Cloud from "@material-ui/icons/Cloud";
 // layout for this page
-import Admin from "layouts/Admin.js";
+import Admin from "renderer/layoutsAdmin.js";
 // core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Tasks from "components/Tasks/Tasks.js";
-import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import Danger from "components/Typography/Danger.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardIcon from "components/Card/CardIcon.js";
-import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
+import GridItem from "renderer/components/Grid/GridItem.js";
+import GridContainer from "renderer/components/Grid/GridContainer.js";
+import Table from "renderer/components/Table/Table.js";
+import Tasks from "renderer/components/Tasks/Tasks.js";
+import CustomTabs from "renderer/components/CustomTabs/CustomTabs.js";
+import Danger from "renderer/components/Typography/Danger.js";
+import Card from "renderer/components/Card/Card.js";
+import CardHeader from "renderer/components/Card/CardHeader.js";
+import CardIcon from "renderer/components/Card/CardIcon.js";
+import CardBody from "renderer/components/Card/CardBody.js";
+import CardFooter from "renderer/components/Card/CardFooter.js";
 
-import { bugs, website, server } from "variables/general.js";
+import { bugs, website, server } from "renderer/variablesgeneral.js";
 
 import {
   dailySalesChart,
   emailsSubscriptionChart,
   completedTasksChart,
-} from "variables/charts.js";
+} from "renderer/variablescharts.js";
 
-import styles from "assets/jss/nextjs-material-dashboard/views/dashboardStyle.js";
+import styles from "renderer/assetsjss/nextjs-material-dashboard/views/dashboardStyle.js";
 
 function Dashboard() {
   const useStyles = makeStyles(styles);
@@ -206,34 +206,18 @@ function Dashboard() {
                 tabName: "Bugs",
                 tabIcon: BugReport,
                 tabContent: (
-                  <Tasks
-                    checkedIndexes={[0, 3]}
-                    tasksIndexes={[0, 1, 2, 3]}
-                    tasks={bugs}
-                  />
+                  <Tasks checkedIndexes={[0, 3]} tasksIndexes={[0, 1, 2, 3]} tasks={bugs} />
                 ),
               },
               {
                 tabName: "Website",
                 tabIcon: Code,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[0]}
-                    tasksIndexes={[0, 1]}
-                    tasks={website}
-                  />
-                ),
+                tabContent: <Tasks checkedIndexes={[0]} tasksIndexes={[0, 1]} tasks={website} />,
               },
               {
                 tabName: "Server",
                 tabIcon: Cloud,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[1]}
-                    tasksIndexes={[0, 1, 2]}
-                    tasks={server}
-                  />
-                ),
+                tabContent: <Tasks checkedIndexes={[1]} tasksIndexes={[0, 1, 2]} tasks={server} />,
               },
             ]}
           />

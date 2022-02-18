@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import router from "next/router";
-import OutwardChalaanForm from "components/Form/OutwardChalaanForm";
-import Admin from "layouts/Admin";
+import OutwardChalaanForm from "renderer/components/Form/OutwardChalaanForm";
+import Admin from "renderer/layoutsAdmin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { items, processes, settings, suppliers, transports } from "lib/masters";
+import { items, processes, settings, suppliers, transports } from "renderer/libmasters";
 
 const create = (props) => {
   const { setError } = useForm();

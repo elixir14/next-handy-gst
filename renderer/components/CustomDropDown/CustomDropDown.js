@@ -7,7 +7,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 // core components
-import styles from "assets/jss/nextjs-material-dashboard/components/customInputStyle.js";
+import styles from "renderer/assetsjss/nextjs-material-dashboard/components/customInputStyle.js";
 import { useController } from "react-hook-form";
 import { MenuItem } from "@material-ui/core";
 
@@ -60,11 +60,7 @@ export default function CustomDropDown(props) {
       className={formControlProps.className + " " + classes.formControl}
     >
       {labelText !== undefined ? (
-        <InputLabel
-          className={classes.labelRoot + labelClasses}
-          htmlFor={id}
-          {...labelProps}
-        >
+        <InputLabel className={classes.labelRoot + labelClasses} htmlFor={id} {...labelProps}>
           {labelText}
         </InputLabel>
       ) : null}

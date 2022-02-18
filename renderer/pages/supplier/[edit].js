@@ -1,11 +1,11 @@
 import React from "react";
 import router from "next/router";
-import SupplierForm from "components/Form/SupplierForm";
-import Admin from "layouts/Admin";
+import SupplierForm from "renderer/components/Form/SupplierForm";
+import Admin from "renderer/layoutsAdmin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { cities, states } from "lib/masters";
+import { cities, states } from "renderer/libmasters";
 
 const edit = (props) => {
   const supplier = JSON.parse(props.supplier);

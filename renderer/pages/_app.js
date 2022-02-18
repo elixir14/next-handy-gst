@@ -3,20 +3,17 @@ import ReactDOM from "react-dom";
 import App from "next/app";
 import Router from "next/router";
 
-import PageChange from "components/PageChange/PageChange.js";
+import PageChange from "renderer/components/PageChange/PageChange";
 
 import { SessionProvider, signIn, useSession } from "next-auth/react";
 
-import "assets/css/nextjs-material-dashboard.css?v=1.1.0";
+// import "renderer/assets/css/nextjs-material-dashboard.css?v=1.1.0";
 import { Toaster } from "react-hot-toast";
 import { useUser } from "../hooks/useUser";
 
 Router.events.on("routeChangeStart", (url) => {
   document.body.classList.add("body-page-transition");
-  ReactDOM.render(
-    <PageChange path={url} />,
-    document.getElementById("page-transition")
-  );
+  ReactDOM.render(<PageChange path={url} />, document.getElementById("page-transition"));
 });
 Router.events.on("routeChangeComplete", () => {
   ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));

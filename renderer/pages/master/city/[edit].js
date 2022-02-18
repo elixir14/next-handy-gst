@@ -1,11 +1,11 @@
 import React from "react";
 import router from "next/router";
-import CityForm from "components/Form/CityForm";
-import Admin from "layouts/Admin";
+import CityForm from "renderer/components/Form/CityForm";
+import Admin from "renderer/layoutsAdmin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { states } from "lib/masters";
+import { states } from "renderer/libmasters";
 
 const edit = (props) => {
   const city = JSON.parse(props.city);
@@ -28,13 +28,7 @@ const edit = (props) => {
       });
   };
 
-  return (
-    <CityForm
-      city={city}
-      handleFormSave={handleFormEdit}
-      stateList={stateList}
-    />
-  );
+  return <CityForm city={city} handleFormSave={handleFormEdit} stateList={stateList} />;
 };
 
 edit.layout = Admin;

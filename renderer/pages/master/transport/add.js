@@ -1,7 +1,7 @@
 import React from "react";
 import router from "next/router";
-import TransportForm from "components/Form/TransportForm";
-import Admin from "layouts/Admin";
+import TransportForm from "renderer/components/Form/TransportForm";
+import Admin from "renderer/layoutsAdmin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";

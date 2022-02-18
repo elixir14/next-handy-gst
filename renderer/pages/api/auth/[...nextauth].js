@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { verifyPassword } from "lib/auth";
-import prisma from "lib/prisma";
+import { verifyPassword } from "renderer/libauth";
+import prisma from "renderer/libprisma";
 
 export default NextAuth({
   session: {
@@ -22,10 +22,7 @@ export default NextAuth({
             email: credentials.email,
           },
         });
-        const isVerified = await verifyPassword(
-          credentials.password,
-          user.password
-        );
+        const isVerified = await verifyPassword(credentials.password, user.password);
         // const isVerified = true;
         if (!user) {
           return null;
