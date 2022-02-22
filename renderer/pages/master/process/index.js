@@ -10,11 +10,19 @@ import router from "next/router";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { STATUS } from "lib/constants";
-import prisma from "lib/prisma";
-import { getSession } from "next-auth/react";
 
-const index = ({ processes, gst_number }) => {
-  const processList = JSON.parse(processes);
+import { getSession, useSession } from "next-auth/react";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
+import { getDataList } from "lib/masters";
+
+const index = ({ dataList, gst_number }) => {
+  const { data: session } = useSession();
+  const { data } = useSWR(
+    session ? `/api/process/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const processList = dataList.length ? dataList : data;
 
   const headerData = [
     { id: "id", name: "Id" },
@@ -60,7 +68,7 @@ const index = ({ processes, gst_number }) => {
             <Table
               tableHeaderColor="primary"
               tableHead={headerData}
-              tableData={processList}
+              tableData={processList || []}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
               searchKey="name"
@@ -79,20 +87,13 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async (ctx) => {
+index.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const processes = await prisma(gst_number).process.findMany({
-    orderBy: [
-      {
-        updated_at: "desc",
-      },
-    ],
-  });
+  const dataList = await getDataList("process", gst_number);
+
   return {
-    props: {
-      gst_number: gst_number || null,
-      processes: JSON.stringify(processes),
-    },
+    gst_number: gst_number || null,
+    dataList,
   };
 };

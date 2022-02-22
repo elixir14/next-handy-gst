@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import router from "next/router";
 import toast from "react-hot-toast";
+import useSWR from "swr";
 
 import Admin from "layouts/Admin";
 import Card from "components/Card/Card.js";
@@ -13,10 +14,18 @@ import GridContainer from "components/Grid/GridContainer.js";
 
 import prisma from "lib/prisma";
 import { STATUS } from "lib/constants";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+import { getDataList } from "lib/masters";
+import { fetcher } from "lib/helper";
 
-const index = ({ itemGroups, gst_number }) => {
-  const itemGroupList = JSON.parse(itemGroups);
+const index = ({ dataList, gst_number }) => {
+  const { data: session } = useSession();
+
+  const { data } = useSWR(
+    session ? `/api/group/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const itemGroupList = dataList.length ? dataList : data;
 
   const headerData = [
     { id: "id", name: "Id" },
@@ -61,7 +70,7 @@ const index = ({ itemGroups, gst_number }) => {
             <Table
               tableHeaderColor="primary"
               tableHead={headerData}
-              tableData={itemGroupList}
+              tableData={itemGroupList || []}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
               searchKey="name"
@@ -80,20 +89,13 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async (ctx) => {
+index.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const itemGroups = await prisma(gst_number).group.findMany({
-    orderBy: [
-      {
-        updated_at: "desc",
-      },
-    ],
-  });
+  const dataList = await getDataList("group", gst_number);
+
   return {
-    props: {
-      gst_number: gst_number || null,
-      itemGroups: JSON.stringify(itemGroups),
-    },
+    gst_number: gst_number || null,
+    dataList,
   };
 };

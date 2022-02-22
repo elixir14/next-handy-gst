@@ -1,19 +1,28 @@
 import React from "react";
+import useSWR from "swr";
+import axios from "axios";
+import router from "next/router";
+import toast from "react-hot-toast";
+import { getSession, useSession } from "next-auth/react";
+
+import { fetcher } from "lib/helper";
+import { getDataList } from "lib/masters";
 import Admin from "layouts/Admin";
+
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import Table from "components/Table/Table";
-import router from "next/router";
-import axios from "axios";
-import toast from "react-hot-toast";
-import prisma from "lib/prisma";
-import { getSession } from "next-auth/react";
 
-const index = ({ transports, gst_number }) => {
-  const transportList = JSON.parse(transports);
+const index = ({ dataList, gst_number }) => {
+  const { data: session } = useSession();
+  const { data } = useSWR(
+    session ? `/api/transport/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const transportList = dataList.length ? dataList : data;
 
   const headerData = [
     { id: "id", name: "Id" },
@@ -59,7 +68,7 @@ const index = ({ transports, gst_number }) => {
             <Table
               tableHeaderColor="primary"
               tableHead={headerData}
-              tableData={transportList}
+              tableData={transportList || []}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
               searchKey="name"
@@ -76,20 +85,14 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async (ctx) => {
+index.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const transports = await prisma(gst_number).transport.findMany({
-    orderBy: [
-      {
-        updated_at: "desc",
-      },
-    ],
-  });
+
+  const dataList = await getDataList("transport", gst_number);
+
   return {
-    props: {
-      gst_number: gst_number || null,
-      transports: JSON.stringify(transports),
-    },
+    gst_number: gst_number || null,
+    dataList,
   };
 };

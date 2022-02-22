@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import router from "next/router";
 import toast from "react-hot-toast";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 
 import prisma from "lib/prisma";
 
@@ -13,9 +13,20 @@ import GridItem from "components/Grid/GridItem.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import DummyChalaan from "@/components/DummyChalaan";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
+import { getDataList } from "lib/masters";
 
-const index = ({ outwardChalaans, gst_number }) => {
-  const outwardChalaanList = JSON.parse(outwardChalaans);
+const index = ({ dataList, gst_number }) => {
+  const { data: session } = useSession();
+  const { data } = useSWR(
+    session ? `/api/outward_chalaan/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const outwardChalaanList = dataList.length ? dataList : data;
+
+  const [open, setOpen] = useState(false);
 
   const headerData = [
     { id: "id", name: "Id" },
@@ -53,6 +64,9 @@ const index = ({ outwardChalaans, gst_number }) => {
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardBody>
+            <Button color="primary" onClick={() => setOpen(true)}>
+              Add Dummy Chalaan
+            </Button>
             <Button
               color="primary"
               onClick={() => router.push(`/outward-chalaan/add`)}
@@ -62,11 +76,12 @@ const index = ({ outwardChalaans, gst_number }) => {
             <Table
               tableHeaderColor="primary"
               tableHead={headerData}
-              tableData={outwardChalaanList}
+              tableData={outwardChalaanList || []}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
               searchKey="number"
             />
+            <DummyChalaan open={open} setOpen={setOpen} />
           </CardBody>
         </Card>
       </GridItem>
@@ -79,20 +94,13 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async (ctx) => {
+index.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const outwardChalaans = await prisma(gst_number).outward_chalaan.findMany({
-    orderBy: [
-      {
-        updated_at: "desc",
-      },
-    ],
-  });
+  const dataList = await getDataList("outward_chalaan", gst_number);
+
   return {
-    props: {
-      gst_number: gst_number || null,
-      outwardChalaans: JSON.stringify(outwardChalaans),
-    },
+    gst_number: gst_number || null,
+    dataList,
   };
 };

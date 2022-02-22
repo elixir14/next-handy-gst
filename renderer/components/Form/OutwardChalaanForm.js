@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -71,18 +71,23 @@ const OutwardChalaanForm = ({
 }) => {
   const classes = useStyles();
   const { control, handleSubmit, setValue } = useForm();
+  const [setting, setSetting] = useState({});
   const {
     control: itemControl,
     handleSubmit: handleItemSubmit,
-    setError: setItemError,
     reset: itemReset,
     setValue: setItemValue,
   } = useForm();
 
-  let setting = {};
-  settingList.map((s) => {
-    setting[s.key] = s;
-  });
+  useEffect(() => {
+    let config = {};
+    if (settingList?.length) {
+      settingList?.map((s) => {
+        config[s.key] = s;
+      });
+    }
+    setSetting(config);
+  }, [settingList]);
 
   const isEdit = !!outward_chalaan;
 
@@ -177,8 +182,13 @@ const OutwardChalaanForm = ({
                     outward_chalaan?.number
                       ? outward_chalaan?.number
                       : `${setting?.prefix?.value ?? ""}${
-                          setting?.outward_challan_next_number?.value ?? ""
-                        }${setting?.suffix?.value ?? ""}`
+                          setting?.outward_challan_next_number?.value > 4
+                            ? String("0000" + (parseInt(ele.value) + 1)).slice(
+                                -4
+                              )
+                            : "0001"
+                        }
+                        ${setting?.suffix?.value ?? ""}`
                   }
                   control={control}
                   formControlProps={{
@@ -230,7 +240,7 @@ const OutwardChalaanForm = ({
                   formControlProps={{
                     fullWidth: true,
                   }}
-                  control={control}
+                  number={true}
                 />
               </GridItem>
             </GridContainer>

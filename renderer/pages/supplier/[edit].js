@@ -3,18 +3,47 @@ import axios from "axios";
 import router from "next/router";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 
-import prisma from "lib/prisma";
 import Admin from "layouts/Admin";
-import { cities, states } from "lib/masters";
+import { getById, getDataList } from "lib/masters";
 import SupplierForm from "components/Form/SupplierForm";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
 
 const edit = (props) => {
   const gst_number = props.gst_number;
-  const supplier = JSON.parse(props.supplier);
-  const cityList = JSON.parse(props.cityList);
-  const stateList = JSON.parse(props.stateList);
+  const { data: session } = useSession();
+  const id = props.editId;
+
+  const { data: supplierData } = useSWR(
+    session ? `/api/supplier/get/${id}?gst_number=${gst_number}` : null,
+    fetcher
+  );
+
+  const { data: cityData } = useSWR(
+    session ? `/api/city/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+
+  const { data: stateData } = useSWR(
+    session ? `/api/state/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+
+  const supplier =
+    JSON.parse(props.supplier)?.status === 404
+      ? supplierData
+      : JSON.parse(props.supplier);
+  const cityList =
+    JSON.parse(props.cityList)?.status === 404
+      ? cityData
+      : JSON.parse(props.cityList);
+  const stateList =
+    JSON.parse(props.stateList)?.status === 404
+      ? stateData
+      : JSON.parse(props.stateList);
+
   const { setError } = useForm();
 
   const handleFormEdit = (data) => {
@@ -61,24 +90,20 @@ edit.auth = true;
 
 export default edit;
 
-export async function getServerSideProps(ctx) {
+edit.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const editId = ctx.params.edit;
+  const editId = ctx.query.edit;
 
-  const supplier = await prisma(gst_number).supplier.findUnique({
-    where: {
-      id: parseInt(editId),
-    },
-  });
-  const cityList = await cities(gst_number);
-  const stateList = await states(gst_number);
+  const supplier = await getById("supplier", gst_number, editId);
+  const cityList = await getDataList("city", gst_number);
+  const stateList = await getDataList("state", gst_number);
+
   return {
-    props: {
-      gst_number: gst_number || null,
-      supplier: JSON.stringify(supplier),
-      cityList: JSON.stringify(cityList),
-      stateList: JSON.stringify(stateList),
-    },
+    gst_number: gst_number || null,
+    editId,
+    supplier: JSON.stringify(supplier),
+    cityList: JSON.stringify(cityList),
+    stateList: JSON.stringify(stateList),
   };
-}
+};

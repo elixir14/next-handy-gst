@@ -1,3 +1,4 @@
+import { get } from "./api";
 import prisma from "./prisma";
 
 export const cities = async (schema) => {
@@ -43,3 +44,11 @@ export const settings = async (schema) => {
 export const companies = async (schema) => {
   return await prisma(schema).company.findMany();
 };
+
+export async function getDataList(modal, gst_number) {
+  return get(`/api/${modal}/get`, { gst_number });
+}
+
+export async function getById(modal, gst_number, id) {
+  return get(`/api/${modal}/get/${id}`, { gst_number });
+}

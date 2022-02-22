@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -17,7 +17,10 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Danger from "@/components/Typography/Danger";
 import prisma from "lib/prisma";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+import { getDataList } from "lib/masters";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
 
 const styles = {
   cardCategoryWhite: {
@@ -58,20 +61,35 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-const index = (props) => {
-  const gst_number = props.gst_number;
-  const settingList = JSON.parse(props.settingList);
+const index = ({ dataList, gst_number }) => {
+  const { data: session } = useSession();
+  const { data } = useSWR(
+    session ? `/api/settings/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const settingList = dataList?.length ? dataList : data;
 
-  const { control, handleSubmit, setError, getValues, clearErrors } = useForm({
-    defaultValues: {},
-  });
+  const { control, handleSubmit, setError, getValues, clearErrors, setValue } =
+    useForm({
+      defaultValues: {},
+    });
 
   const mergeById = (a1, a2) =>
     a1.map((itm) => ({
       ...a2.find((item) => item.id === itm.id && item),
       ...itm,
     }));
-  const settings = mergeById(SETTINGS, settingList);
+  const settings = mergeById(SETTINGS, settingList || []);
+
+  useEffect(() => {
+    if (settings?.length) {
+      settings.map((s) => {
+        setValue(s.key, s.value, {
+          shouldValidate: true,
+        });
+      });
+    }
+  }, [settings]);
 
   const classes = useStyles();
 
@@ -83,7 +101,7 @@ const index = (props) => {
     }));
 
     const payload = settingData;
-    if (settingList.length) {
+    if (settingList?.length) {
       axios
         .post(`/api/settings/many/edit`, { payload, gst_number })
         .then((res) => {
@@ -183,14 +201,13 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async (ctx) => {
+index.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const settingList = await prisma(gst_number).settings.findMany();
+  const dataList = await getDataList("settings", gst_number);
+
   return {
-    props: {
-      gst_number: gst_number || null,
-      settingList: JSON.stringify(settingList),
-    },
+    gst_number: gst_number || null,
+    dataList,
   };
 };

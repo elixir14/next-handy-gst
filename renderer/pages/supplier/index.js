@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import router from "next/router";
 import toast from "react-hot-toast";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 
 import prisma from "lib/prisma";
 
@@ -13,9 +13,17 @@ import GridItem from "components/Grid/GridItem.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import { getDataList } from "lib/masters";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
 
-const index = ({ suppliers, gst_number }) => {
-  const supplierList = JSON.parse(suppliers);
+const index = ({ dataList, gst_number }) => {
+  const { data: session } = useSession();
+  const { data } = useSWR(
+    session ? `/api/supplier/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const supplierList = dataList?.length ? dataList : data;
 
   const headerData = [
     { id: "id", name: "Id" },
@@ -64,7 +72,7 @@ const index = ({ suppliers, gst_number }) => {
             <Table
               tableHeaderColor="primary"
               tableHead={headerData}
-              tableData={supplierList}
+              tableData={supplierList || []}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
               searchKey="name"
@@ -81,20 +89,13 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async (ctx) => {
+index.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const suppliers = await prisma(gst_number).supplier.findMany({
-    orderBy: [
-      {
-        updated_at: "desc",
-      },
-    ],
-  });
+  const dataList = await getDataList("supplier", gst_number);
+
   return {
-    props: {
-      gst_number: gst_number || null,
-      suppliers: JSON.stringify(suppliers),
-    },
+    gst_number: gst_number || null,
+    dataList,
   };
 };

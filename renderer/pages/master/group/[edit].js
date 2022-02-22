@@ -4,14 +4,29 @@ import router from "next/router";
 import Admin from "layouts/Admin";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 
-import prisma from "lib/prisma";
 import ItemGroupForm from "components/Form/ItemGroupForm";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
+import { getById } from "lib/masters";
 
 const edit = (props) => {
   const gst_number = props.gst_number;
-  const itemGroup = JSON.parse(props.itemGroup);
+  const id = props.editId;
+
+  const { data: session } = useSession();
+
+  const { data: groupData } = useSWR(
+    session ? `/api/group/get/${id}?gst_number=${gst_number}` : null,
+    fetcher
+  );
+
+  const itemGroup =
+    JSON.parse(props.itemGroup)?.status === 404
+      ? groupData
+      : JSON.parse(props.itemGroup);
+
   const { setError } = useForm();
 
   const handleFormEdit = (data) => {
@@ -40,21 +55,16 @@ edit.auth = true;
 
 export default edit;
 
-export async function getServerSideProps(ctx) {
+edit.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const editId = params.edit;
+  const editId = ctx.query.edit;
 
-  const itemGroup = await prisma(gst_number).group.findUnique({
-    where: {
-      id: parseInt(editId),
-    },
-  });
+  const itemGroup = await getById("group", gst_number, editId);
 
   return {
-    props: {
-      gst_number: gst_number || null,
-      itemGroup: JSON.stringify(itemGroup),
-    },
+    gst_number: gst_number || null,
+    editId,
+    itemGroup: JSON.stringify(itemGroup),
   };
-}
+};

@@ -11,10 +11,18 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { STATUS } from "lib/constants";
 import prisma from "lib/prisma";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
+import { getDataList } from "lib/masters";
 
-const index = ({ items, gst_number }) => {
-  const itemList = JSON.parse(items);
+const index = ({ dataList, gst_number }) => {
+  const { data: session } = useSession();
+  const { data } = useSWR(
+    session ? `/api/item/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const itemList = dataList.length ? dataList : data;
 
   const headerData = [
     { id: "id", name: "Id" },
@@ -62,7 +70,7 @@ const index = ({ items, gst_number }) => {
             <Table
               tableHeaderColor="primary"
               tableHead={headerData}
-              tableData={itemList}
+              tableData={itemList || []}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
               searchKey="name"
@@ -81,20 +89,13 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async (ctx) => {
+index.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const items = await prisma(gst_number).item.findMany({
-    orderBy: [
-      {
-        updated_at: "desc",
-      },
-    ],
-  });
+  const dataList = await getDataList("item", gst_number);
+
   return {
-    props: {
-      gst_number: gst_number || null,
-      items: JSON.stringify(items),
-    },
+    gst_number: gst_number || null,
+    dataList,
   };
 };

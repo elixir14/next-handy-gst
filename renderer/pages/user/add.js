@@ -3,15 +3,18 @@ import axios from "axios";
 import router from "next/router";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 import { hashPassword } from "lib/auth";
 
 import UserForm from "components/Form/UserForm";
 import Admin from "layouts/Admin";
 
-const create = ({ gst_number }) => {
+const create = () => {
   const { setError } = useForm();
+
+  const { data: session } = useSession();
+  const gst_number = session?.company?.gst_number?.toLowerCase();
 
   const handleFormSave = async (data) => {
     if (data.password !== data.confirm_password) {
@@ -51,13 +54,3 @@ create.layout = Admin;
 create.auth = true;
 
 export default create;
-
-export async function getServerSideProps(ctx) {
-  const session = await getSession(ctx);
-
-  return {
-    props: {
-      gst_number: session?.company?.gst_number?.toLowerCase() || null,
-    },
-  };
-}

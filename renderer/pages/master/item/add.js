@@ -3,19 +3,39 @@ import axios from "axios";
 import router from "next/router";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 
-import { itemGroups, units } from "lib/masters";
+import { getDataList } from "lib/masters";
 
 import Admin from "layouts/Admin";
 import ItemForm from "components/Form/ItemForm";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
 
 const create = (props) => {
   const { setError } = useForm();
+  const { data: session } = useSession();
 
   const gst_number = props.gst_number;
-  const groupList = JSON.parse(props.groupList);
-  const unitList = JSON.parse(props.unitList);
+
+  const { data: groupData } = useSWR(
+    session ? `/api/group/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: unitData } = useSWR(
+    session ? `/api/unit/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+
+  const groupList =
+    JSON.parse(props.groupList)?.status === 404
+      ? groupData
+      : JSON.parse(props.groupList);
+
+  const unitList =
+    JSON.parse(props.unitList)?.status === 404
+      ? unitData
+      : JSON.parse(props.unitList);
 
   const handleFormSave = (data) => {
     const payload = data;
@@ -47,17 +67,16 @@ create.auth = true;
 
 export default create;
 
-export async function getServerSideProps(ctx) {
+create.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const groupList = await itemGroups(gst_number);
-  const unitList = await units(gst_number);
+
+  const groupList = await getDataList("group", gst_number);
+  const unitList = await getDataList("unit", gst_number);
 
   return {
-    props: {
-      gst_number: gst_number || null,
-      groupList: JSON.stringify(groupList),
-      unitList: JSON.stringify(unitList),
-    },
+    gst_number: gst_number || null,
+    groupList: JSON.stringify(groupList),
+    unitList: JSON.stringify(unitList),
   };
-}
+};

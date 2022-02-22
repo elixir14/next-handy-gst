@@ -18,12 +18,7 @@ export default async function handler(req, res) {
       .json({ message: "Company already register with this GST number" });
     return;
   }
-  child_process.exec(
-    `npm run schema:file --name=${payload.gst_number}`,
-    function (error, stdout, stderr) {
-      console.log(stdout);
-    }
-  );
+  child_process.exec(`npm run schema:file --name=${payload.gst_number}`);
 
   try {
     const data = await prisma("public")[model.replace(/-/g, "_")].create({
