@@ -1,16 +1,29 @@
 import React from "react";
 import router from "next/router";
-import UnitForm from "components/Form/UnitForm";
-import Admin from "layouts/Admin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import useSWR from "swr";
 import toast from "react-hot-toast";
-import prisma from "lib/prisma";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+
+import UnitForm from "components/Form/UnitForm";
+import Admin from "layouts/Admin";
+
+import { fetcher } from "lib/helper";
+import { getById } from "lib/masters";
 
 const edit = (props) => {
   const gst_number = props.gst_number;
-  const unit = JSON.parse(props.unit);
+  const id = props.editId;
+  const { data: session } = useSession();
+
+  const { data: unitData } = useSWR(
+    session ? `/api/unit/get/${id}?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const unit =
+    JSON.parse(props.unit)?.status === 404 ? unitData : JSON.parse(props.unit);
+
   const { setError } = useForm();
 
   const handleFormEdit = (data) => {
@@ -37,21 +50,16 @@ edit.auth = true;
 
 export default edit;
 
-export async function getServerSideProps(ctx) {
+edit.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const editId = ctx.params.edit;
+  const editId = ctx.query.edit;
 
-  const unit = await prisma(gst_number).unit.findUnique({
-    where: {
-      id: parseInt(editId),
-    },
-  });
+  const unit = await getById("unit", gst_number, editId);
 
   return {
-    props: {
-      gst_number: gst_number || null,
-      unit: JSON.stringify(unit),
-    },
+    gst_number: gst_number || null,
+    editId,
+    unit: JSON.stringify(unit),
   };
-}
+};

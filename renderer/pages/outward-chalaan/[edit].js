@@ -1,26 +1,86 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import router from "next/router";
 import OutwardChalaanForm from "components/Form/OutwardChalaanForm";
 import Admin from "layouts/Admin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { items, processes, settings, suppliers, transports } from "lib/masters";
-import prisma from "lib/prisma";
-import { getSession } from "next-auth/react";
+import { getById, getDataList } from "lib/masters";
+import { getSession, useSession } from "next-auth/react";
+import { fetcher } from "lib/helper";
+import useSWR from "swr";
 
 const edit = (props) => {
   const gst_number = props.gst_number;
-  const outward_chalaan = JSON.parse(props.outward_chalaan);
-  const transportList = JSON.parse(props.transportList);
-  const supplierList = JSON.parse(props.supplierList);
-  const processList = JSON.parse(props.processList);
-  const chalaanItemList = JSON.parse(props.chalaanItemList);
-  const itemList = JSON.parse(props.itemList);
-  const settingList = JSON.parse(props.settingList);
+  const { data: session } = useSession();
+  const id = props.editId;
 
-  const [chalaanItems, setChalaanItems] = useState(chalaanItemList);
-  const [tempItems, setTempItems] = useState(chalaanItemList);
+  const { data: outwardChalaanData } = useSWR(
+    session ? `/api/outward_chalaan/get/${id}?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: transportData } = useSWR(
+    session ? `/api/transport/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: supplierData } = useSWR(
+    session ? `/api/supplier/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: processData } = useSWR(
+    session ? `/api/process/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: itemData } = useSWR(
+    session ? `/api/item/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: settingData } = useSWR(
+    session ? `/api/settings/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: chalaanItemData } = useSWR(
+    session
+      ? `/api/outward_chalaan_item/get?gst_number=${gst_number}&outward_chalaan_id=${id}`
+      : null,
+    fetcher
+  );
+
+  const outward_chalaan =
+    JSON.parse(props.outward_chalaan)?.status === 404
+      ? outwardChalaanData
+      : JSON.parse(props.outward_chalaan);
+  const transportList =
+    JSON.parse(props.transportList)?.status === 404
+      ? transportData
+      : JSON.parse(props.transportList);
+  const supplierList =
+    JSON.parse(props.supplierList)?.status === 404
+      ? supplierData
+      : JSON.parse(props.supplierList);
+  const processList =
+    JSON.parse(props.processList)?.status === 404
+      ? processData
+      : JSON.parse(props.processList);
+  const itemList =
+    JSON.parse(props.itemList)?.status === 404
+      ? itemData
+      : JSON.parse(props.itemList);
+  const settingList =
+    JSON.parse(props.settingList)?.status === 404
+      ? settingData
+      : JSON.parse(props.settingList);
+  const chalaanItemList = chalaanItemData;
+
+  const [chalaanItems, setChalaanItems] = useState([]);
+  const [tempItems, setTempItems] = useState([]);
+
+  useEffect(() => {
+    if (chalaanItemList?.length) {
+      setChalaanItems(chalaanItemList);
+      setTempItems(chalaanItemList);
+    }
+  }, [chalaanItemList]);
 
   const { setError } = useForm();
 
@@ -68,7 +128,7 @@ const edit = (props) => {
     delete data.total_gross_weight;
     const payload = { ...data, date };
     await axios
-      .post(`/api/outward-chalaan/edit/${outward_chalaan.id}`, {
+      .post(`/api/outward-chalaan/edit/${outward_chalaan?.id}`, {
         payload,
         gst_number,
       })
@@ -93,7 +153,7 @@ const edit = (props) => {
       supplierList={supplierList}
       processList={processList}
       itemList={itemList}
-      settingList={settingList}
+      settingList={settingList || []}
       chalaanItems={chalaanItems}
       setChalaanItems={setChalaanItems}
       tempItems={tempItems}
@@ -107,39 +167,27 @@ edit.auth = true;
 
 export default edit;
 
-export async function getServerSideProps(ctx) {
+edit.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const editId = ctx.params.edit;
+  const editId = ctx.query.edit;
 
-  const outward_chalaan = await prisma(gst_number).outward_chalaan.findUnique({
-    where: {
-      id: parseInt(editId),
-    },
-  });
-  const chalaanItemList = await prisma(
-    gst_number
-  ).outward_chalaan_item.findMany({
-    where: {
-      outward_chalaan_id: parseInt(editId),
-    },
-  });
-  const transportList = await transports(gst_number);
-  const supplierList = await suppliers(gst_number);
-  const processList = await processes(gst_number);
-  const itemList = await items(gst_number);
-  const settingList = await settings(gst_number);
+  const outward_chalaan = await getById("outward_chalaan", gst_number, editId);
+
+  const transportList = await getDataList("transport", gst_number);
+  const supplierList = await getDataList("supplier", gst_number);
+  const processList = await getDataList("process", gst_number);
+  const itemList = await getDataList("item", gst_number);
+  const settingList = await getDataList("settings", gst_number);
 
   return {
-    props: {
-      gst_number: gst_number || null,
-      outward_chalaan: JSON.stringify(outward_chalaan),
-      transportList: JSON.stringify(transportList),
-      supplierList: JSON.stringify(supplierList),
-      processList: JSON.stringify(processList),
-      chalaanItemList: JSON.stringify(chalaanItemList),
-      itemList: JSON.stringify(itemList),
-      settingList: JSON.stringify(settingList),
-    },
+    gst_number: gst_number || null,
+    editId,
+    outward_chalaan: JSON.stringify(outward_chalaan),
+    transportList: JSON.stringify(transportList),
+    supplierList: JSON.stringify(supplierList),
+    processList: JSON.stringify(processList),
+    itemList: JSON.stringify(itemList),
+    settingList: JSON.stringify(settingList),
   };
-}
+};

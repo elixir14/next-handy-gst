@@ -9,14 +9,26 @@ import Table from "components/Table/Table";
 import router from "next/router";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { states } from "lib/masters";
-import prisma from "lib/prisma";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+import useSWR from "swr";
+import { getDataList } from "lib/masters";
+import { fetcher } from "lib/helper";
 
 const index = (props) => {
   const gst_number = props.gst_number;
-  const cityList = JSON.parse(props.cities);
-  const stateList = JSON.parse(props.stateList);
+  const { data: session } = useSession();
+
+  const { data: cityData } = useSWR(
+    session ? `/api/city/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: stateData } = useSWR(
+    session ? `/api/state/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+
+  const cityList = props.cities.length ? props.cities : cityData;
+  const stateList = props.stateList.length ? props.stateList : stateData;
 
   const mergeById = (a1, a2) =>
     a1.map((itm) => ({
@@ -24,7 +36,7 @@ const index = (props) => {
       ...itm,
     }));
 
-  const citiesWithState = mergeById(cityList, stateList);
+  const citiesWithState = mergeById(cityList || [], stateList || []);
 
   const headerData = [
     { id: "id", name: "Id" },
@@ -68,7 +80,7 @@ const index = (props) => {
             <Table
               tableHeaderColor="primary"
               tableHead={headerData}
-              tableData={citiesWithState}
+              tableData={citiesWithState || []}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
               searchKey="name"
@@ -85,22 +97,14 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async (ctx) => {
+index.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const stateList = await states(gst_number);
-  const cities = await prisma(gst_number).city.findMany({
-    orderBy: [
-      {
-        updated_at: "desc",
-      },
-    ],
-  });
+  const stateList = await getDataList("state", gst_number);
+  const cities = await getDataList("city", gst_number);
   return {
-    props: {
-      gst_number: gst_number || null,
-      cities: JSON.stringify(cities),
-      stateList: JSON.stringify(stateList),
-    },
+    gst_number: gst_number || null,
+    cities,
+    stateList,
   };
 };

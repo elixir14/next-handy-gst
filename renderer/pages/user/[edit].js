@@ -3,26 +3,30 @@ import axios from "axios";
 import router from "next/router";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { getSession } from "next-auth/react";
-
-import prisma from "lib/prisma";
+import { getSession, useSession } from "next-auth/react";
 
 import Admin from "layouts/Admin";
 import UserForm from "components/Form/UserForm";
+import { getById } from "lib/masters";
+import { fetcher } from "lib/helper";
+import useSWR from "swr";
 
 const edit = (props) => {
+  const { data: session } = useSession();
   const gst_number = props.gst_number;
-  const user = JSON.parse(props.user);
+  const id = props.editId;
+
+  const { data: userData } = useSWR(
+    session ? `/api/user/get/${id}?gst_number=${gst_number}` : null,
+    fetcher
+  );
+
+  const user =
+    JSON.parse(props.user)?.status === 404 ? userData : JSON.parse(props.user);
+
   const { setError } = useForm();
 
   const handleFormEdit = (data) => {
-    if (data.password !== data.confirm_password) {
-      setError("confirm_password", {
-        type: "required",
-        message: "The passwords do not match",
-      });
-      return;
-    }
     delete data.confirm_password;
     const payload = data;
     axios
@@ -57,21 +61,16 @@ edit.auth = true;
 
 export default edit;
 
-export async function getServerSideProps(ctx) {
+edit.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const editId = ctx.params.edit;
+  const editId = ctx.query.edit;
 
-  const user = await prisma(gst_number).user.findUnique({
-    where: {
-      id: parseInt(editId),
-    },
-  });
+  const user = await getById("user", gst_number, editId);
 
   return {
-    props: {
-      gst_number: gst_number || null,
-      user: JSON.stringify(user),
-    },
+    gst_number: gst_number || null,
+    editId,
+    user: JSON.stringify(user) ?? null,
   };
-}
+};

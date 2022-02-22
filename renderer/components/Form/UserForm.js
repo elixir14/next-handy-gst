@@ -56,9 +56,19 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 const UserForm = ({ user, handleFormSave, onError }) => {
-  const { control, handleSubmit, getValues } = useForm();
+  const { control, handleSubmit, getValues, setValue } = useForm();
 
   const isEdit = !!user;
+
+  useEffect(() => {
+    if (user) {
+      Object.keys(user).map((key) => {
+        setValue(key, user[key], {
+          shouldValidate: true,
+        });
+      });
+    }
+  }, [user]);
 
   const classes = useStyles();
 

@@ -18,7 +18,8 @@ import router from "next/router";
 import toast from "react-hot-toast";
 import Primary from "@/components/Typography/Primary";
 import CustomDropDown from "@/components/CustomDropDown/CustomDropDown";
-import { companies } from "lib/masters";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
 
 const styles = {
   cardCategoryWhite: {
@@ -61,8 +62,10 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 const Login = (props) => {
-  const companyList = JSON.parse(props.companyList);
   const classes = useStyles();
+
+  const { data: companyData } = useSWR(`/api/company/get`, fetcher);
+
   const { handleSubmit, control } = useForm();
 
   const onSubmit = async (data) => {
@@ -145,7 +148,7 @@ const Login = (props) => {
                   control={control}
                   labelText="Company"
                   name="company"
-                  optionData={companyList}
+                  optionData={companyData || []}
                   defaultValue=""
                   additional={true}
                   formControlProps={{
@@ -173,17 +176,3 @@ const Login = (props) => {
 };
 
 export default Login;
-
-export async function getServerSideProps() {
-  let companyList;
-  try {
-    companyList = await companies("public");
-  } catch {
-    companyList = [];
-  }
-  return {
-    props: {
-      companyList: JSON.stringify(companyList),
-    },
-  };
-}

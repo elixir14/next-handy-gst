@@ -17,7 +17,7 @@ export default function DummyChalaan(open, setOpen) {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      {/* <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Open alert dialog
       </Button>
       <Dialog
@@ -43,7 +43,7 @@ export default function DummyChalaan(open, setOpen) {
             Agree
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 }

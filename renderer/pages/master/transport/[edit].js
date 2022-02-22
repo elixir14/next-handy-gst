@@ -6,11 +6,25 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
 import prisma from "lib/prisma";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
+import { getById } from "lib/masters";
 
 const edit = (props) => {
   const gst_number = props.gst_number;
-  const transport = JSON.parse(props.transport);
+  const id = props.editId;
+  const { data: session } = useSession();
+
+  const { data: transportData } = useSWR(
+    session ? `/api/transport/get/${id}?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const transport =
+    JSON.parse(props.transport)?.status === 404
+      ? transportData
+      : JSON.parse(props.transport);
+
   const { setError } = useForm();
 
   const handleFormEdit = (data) => {
@@ -39,21 +53,16 @@ edit.auth = true;
 
 export default edit;
 
-export async function getServerSideProps(ctx) {
+edit.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const editId = ctx.params.edit;
+  const editId = ctx.query.edit;
 
-  const transport = await prisma(gst_number).transport.findUnique({
-    where: {
-      id: parseInt(editId),
-    },
-  });
+  const transport = await getById("transport", gst_number, editId);
 
   return {
-    props: {
-      gst_number: gst_number || null,
-      transport: JSON.stringify(transport),
-    },
+    gst_number: gst_number || null,
+    editId,
+    transport: JSON.stringify(transport),
   };
-}
+};

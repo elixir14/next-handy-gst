@@ -4,28 +4,44 @@ import router from "next/router";
 import Admin from "layouts/Admin";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { getSession } from "next-auth/react";
-
-import { items, processes, settings, suppliers, transports } from "lib/masters";
+import { useSession } from "next-auth/react";
 
 import OutwardChalaanForm from "components/Form/OutwardChalaanForm";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
 
 const create = (props) => {
   const { setError } = useForm();
+  const { data: session } = useSession();
+  const gst_number = session?.company?.gst_number?.toLowerCase();
 
-  const gst_number = props.gst_number;
-  const transportList = JSON.parse(props.transportList);
-  const supplierList = JSON.parse(props.supplierList);
-  const processList = JSON.parse(props.processList);
-  const itemList = JSON.parse(props.itemList);
-  const settingList = JSON.parse(props.settingList);
+  const { data: transportList } = useSWR(
+    session ? `/api/transport/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: supplierList } = useSWR(
+    session ? `/api/supplier/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: processList } = useSWR(
+    session ? `/api/process/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: itemList } = useSWR(
+    session ? `/api/item/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: settingList } = useSWR(
+    session ? `/api/settings/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
 
   const [chalaanItems, setChalaanItems] = useState([]);
   const [tempItems, setTempItems] = useState([]);
 
   const updateChalaanNumber = () => {
     let number;
-    settingList.map((setting) => {
+    settingList?.map((setting) => {
       if (setting.key === "outward_challan_next_number") {
         number = setting;
       }
@@ -96,24 +112,3 @@ create.layout = Admin;
 create.auth = true;
 
 export default create;
-
-export async function getServerSideProps(ctx) {
-  const session = await getSession(ctx);
-  const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const transportList = await transports(gst_number);
-  const supplierList = await suppliers(gst_number);
-  const processList = await processes(gst_number);
-  const itemList = await items(gst_number);
-  const settingList = await settings(gst_number);
-
-  return {
-    props: {
-      gst_number: gst_number || null,
-      transportList: JSON.stringify(transportList),
-      supplierList: JSON.stringify(supplierList),
-      processList: JSON.stringify(processList),
-      itemList: JSON.stringify(itemList),
-      settingList: JSON.stringify(settingList),
-    },
-  };
-}

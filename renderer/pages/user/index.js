@@ -1,10 +1,9 @@
 import React from "react";
-import router from "next/router";
+import useSWR from "swr";
 import axios from "axios";
+import router from "next/router";
 import toast from "react-hot-toast";
-import { getSession } from "next-auth/react";
-
-import prisma from "lib/prisma";
+import { getSession, useSession } from "next-auth/react";
 
 import Admin from "layouts/Admin";
 import GridItem from "components/Grid/GridItem.js";
@@ -13,9 +12,17 @@ import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import Table from "components/Table/Table";
+import { getDataList } from "lib/masters";
+import { fetcher } from "lib/helper";
 
-const index = ({ users, gst_number }) => {
-  const userList = JSON.parse(users);
+const index = ({ dataList, gst_number }) => {
+  const { data: session } = useSession();
+
+  const { data } = useSWR(
+    session ? `/api/user/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const userList = dataList.length ? dataList : data;
 
   const headerData = [
     { id: "id", name: "Id" },
@@ -59,7 +66,7 @@ const index = ({ users, gst_number }) => {
             <Table
               tableHeaderColor="primary"
               tableHead={headerData}
-              tableData={userList}
+              tableData={userList || []}
               rawClick={rawClick}
               deleteEntry={deleteEntry}
               searchKey="username"
@@ -76,27 +83,12 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async (ctx) => {
+index.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const users = await prisma(gst_number).user.findMany({
-    where: {
-      NOT: {
-        email: {
-          endsWith: session?.user?.email,
-        },
-      },
-    },
-    orderBy: [
-      {
-        updated_at: "desc",
-      },
-    ],
-  });
+  const dataList = await getDataList("user", gst_number);
   return {
-    props: {
-      gst_number: gst_number || null,
-      users: JSON.stringify(users),
-    },
+    gst_number: gst_number || null,
+    dataList,
   };
 };

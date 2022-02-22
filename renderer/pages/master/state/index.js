@@ -10,10 +10,18 @@ import router from "next/router";
 import axios from "axios";
 import toast from "react-hot-toast";
 import prisma from "lib/prisma";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
+import { getDataList } from "lib/masters";
 
-const index = ({ states, gst_number }) => {
-  const stateList = JSON.parse(states);
+const index = ({ dataList, gst_number }) => {
+  const { data: session } = useSession();
+  const { data } = useSWR(
+    session ? `/api/state/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const stateList = dataList.length ? dataList : data;
 
   const headerData = [
     { id: "id", name: "Id" },
@@ -75,20 +83,13 @@ index.auth = true;
 
 export default index;
 
-export const getServerSideProps = async (ctx) => {
+index.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const states = await prisma(gst_number).state.findMany({
-    orderBy: [
-      {
-        updated_at: "desc",
-      },
-    ],
-  });
+  const dataList = await getDataList("state", gst_number);
+
   return {
-    props: {
-      gst_number: gst_number || null,
-      states: JSON.stringify(states),
-    },
+    gst_number: gst_number || null,
+    dataList,
   };
 };

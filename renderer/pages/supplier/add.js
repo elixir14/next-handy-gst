@@ -2,16 +2,36 @@ import React from "react";
 import axios from "axios";
 import router from "next/router";
 import toast from "react-hot-toast";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 
 import Admin from "layouts/Admin";
-import { cities, states } from "lib/masters";
+import { getDataList } from "lib/masters";
 import SupplierForm from "components/Form/SupplierForm";
+import useSWR from "swr";
+import { fetcher } from "lib/helper";
 
 const create = (props) => {
   const gst_number = props.gst_number;
-  const cityList = JSON.parse(props.cityList);
-  const stateList = JSON.parse(props.stateList);
+  const { data: session } = useSession();
+
+  const { data: cityData } = useSWR(
+    session ? `/api/city/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+  const { data: stateData } = useSWR(
+    session ? `/api/state/get?gst_number=${gst_number}` : null,
+    fetcher
+  );
+
+  const cityList =
+    JSON.parse(props.cityList)?.status === 404
+      ? cityData
+      : JSON.parse(props.cityList);
+  const stateList =
+    JSON.parse(props.stateList)?.status === 404
+      ? stateData
+      : JSON.parse(props.stateList);
+
   const handleFormSave = (data) => {
     const payload = {
       ...data,
@@ -56,16 +76,14 @@ create.auth = true;
 
 export default create;
 
-export async function getServerSideProps(ctx) {
+create.getInitialProps = async (ctx) => {
   const session = await getSession(ctx);
   const gst_number = session?.company?.gst_number?.toLowerCase() || null;
-  const cityList = await cities(gst_number);
-  const stateList = await states(gst_number);
+  const cityList = await getDataList("city", gst_number);
+  const stateList = await getDataList("state", gst_number);
   return {
-    props: {
-      cityList: JSON.stringify(cityList),
-      stateList: JSON.stringify(stateList),
-      gst_number: gst_number || null,
-    },
+    cityList: JSON.stringify(cityList),
+    stateList: JSON.stringify(stateList),
+    gst_number: gst_number || null,
   };
-}
+};

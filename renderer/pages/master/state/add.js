@@ -5,10 +5,12 @@ import Admin from "layouts/Admin";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
-const create = ({ gst_number }) => {
+const create = () => {
   const { setError } = useForm();
+  const { data: session } = useSession();
+  const gst_number = session?.company?.gst_number?.toLowerCase();
 
   const handleFormSave = (data) => {
     const payload = data;
@@ -33,13 +35,3 @@ create.layout = Admin;
 create.auth = true;
 
 export default create;
-
-export async function getServerSideProps(ctx) {
-  const session = await getSession(ctx);
-
-  return {
-    props: {
-      gst_number: session?.company?.gst_number?.toLowerCase() || null,
-    },
-  };
-}
