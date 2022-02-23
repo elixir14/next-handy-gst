@@ -2,7 +2,7 @@
 CREATE SCHEMA IF NOT EXISTS :v1 AUTHORIZATION postgres;
 SET search_path = :v1;
 
-\i renderer/prisma/migrations/init/migration.sql;
+\i renderer/prisma/init/migration.sql;
 \i renderer/prisma/states.sql
 \i renderer/prisma/cities.sql
 
