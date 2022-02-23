@@ -1,30 +1,4 @@
 -- CreateTable
-CREATE TABLE public."Company" (
-    "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "sub_title" TEXT NOT NULL,
-    "mfg_details" TEXT NOT NULL,
-    "address" JSONB NOT NULL,
-    "city" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "phone" TEXT NOT NULL,
-    "fax_number" TEXT NOT NULL,
-    "tin_number" TEXT NOT NULL,
-    "cst_number" TEXT NOT NULL,
-    "ecc_number" TEXT NOT NULL,
-    "reg_number" TEXT NOT NULL,
-    "gst_number" TEXT NOT NULL,
-    "note" TEXT NOT NULL,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "Company_pkey" PRIMARY KEY ("id")
-);
-
--- CreateIndex
-CREATE UNIQUE INDEX "Company_gst_number_key" ON "Company"("gst_number");
-
--- CreateTable
 CREATE TABLE "City" (
     "id" SERIAL NOT NULL,
     "state_id" INTEGER NOT NULL,
@@ -44,6 +18,29 @@ CREATE TABLE "State" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "State_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Company" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "sub_title" TEXT NOT NULL,
+    "mfg_details" TEXT NOT NULL,
+    "address" JSONB NOT NULL,
+    "city" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
+    "fax_number" TEXT NOT NULL,
+    "tin_number" TEXT NOT NULL,
+    "cst_number" TEXT NOT NULL,
+    "ecc_number" TEXT NOT NULL,
+    "reg_number" TEXT NOT NULL,
+    "gst_number" TEXT NOT NULL,
+    "note" TEXT NOT NULL,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Company_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -192,6 +189,8 @@ CREATE TABLE "Settings" (
     CONSTRAINT "Settings_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Company_gst_number_key" ON "Company"("gst_number");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
