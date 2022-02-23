@@ -18,10 +18,7 @@ const create = (props) => {
     fetcher
   );
   const { setError } = useForm();
-  const stateList =
-    JSON.parse(props.stateList)?.status === 404
-      ? stateData
-      : JSON.parse(props.stateList);
+  const stateList = stateData || [];
 
   const handleFormSave = (data) => {
     const payload = data;

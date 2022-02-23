@@ -23,14 +23,10 @@ const create = (props) => {
     fetcher
   );
 
-  const cityList =
-    JSON.parse(props.cityList)?.status === 404
-      ? cityData
-      : JSON.parse(props.cityList);
-  const stateList =
-    JSON.parse(props.stateList)?.status === 404
-      ? stateData
-      : JSON.parse(props.stateList);
+  const cityList = Array.isArray(props.cityList)
+    ? props.cityList
+    : cityData || [];
+  const stateList = stateData || [];
 
   const handleFormSave = (data) => {
     const payload = {
@@ -82,7 +78,7 @@ create.getInitialProps = async (ctx) => {
   const cityList = await getDataList("city", gst_number);
   const stateList = await getDataList("state", gst_number);
   return {
-    cityList: JSON.stringify(cityList),
+    cityList: cityList,
     stateList: JSON.stringify(stateList),
     gst_number: gst_number || null,
   };

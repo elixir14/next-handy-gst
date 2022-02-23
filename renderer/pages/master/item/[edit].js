@@ -35,15 +35,9 @@ const edit = (props) => {
   const item =
     JSON.parse(props.item)?.status === 404 ? itemData : JSON.parse(props.item);
 
-  const groupList =
-    JSON.parse(props.groupList)?.status === 404
-      ? groupData
-      : JSON.parse(props.groupList);
+  const groupList = groupData || [];
 
-  const unitList =
-    JSON.parse(props.unitList)?.status === 404
-      ? unitData
-      : JSON.parse(props.unitList);
+  const unitList = unitData || [];
 
   const { setError } = useForm();
 

@@ -35,14 +35,10 @@ const edit = (props) => {
     JSON.parse(props.supplier)?.status === 404
       ? supplierData
       : JSON.parse(props.supplier);
-  const cityList =
-    JSON.parse(props.cityList)?.status === 404
-      ? cityData
-      : JSON.parse(props.cityList);
-  const stateList =
-    JSON.parse(props.stateList)?.status === 404
-      ? stateData
-      : JSON.parse(props.stateList);
+  const cityList = Array.isArray(props.cityList)
+    ? props.cityList
+    : cityData || [];
+  const stateList = stateData || [];
 
   const { setError } = useForm();
 
