@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -55,9 +55,19 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 const ItemForm = ({ item, handleFormSave, groupList, unitList }) => {
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     defaultValues: {},
   });
+
+  useEffect(() => {
+    if (item) {
+      Object.keys(item).map((key) => {
+        setValue(key, item[key], {
+          shouldValidate: true,
+        });
+      });
+    }
+  }, [item]);
 
   const isEdit = !!item;
 

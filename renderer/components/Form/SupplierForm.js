@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -61,6 +61,23 @@ const SupplierForm = ({ supplier, handleFormSave, cityList, stateList }) => {
 
   const [stateRequired, setStateRequired] = useState(false);
   const [filteredCity, setFilteredCity] = useState(cityList);
+
+  useEffect(() => {
+    if (supplier) {
+      Object.keys(supplier).map((key) => {
+        if (typeof supplier[key] === "object") {
+          Object.keys(supplier[key]).map((childKey) => {
+            setValue(childKey, supplier[key][childKey], {
+              shouldValidate: true,
+            });
+          });
+        }
+        setValue(key, supplier[key], {
+          shouldValidate: true,
+        });
+      });
+    }
+  }, [supplier]);
 
   const isEdit = !!supplier;
 
