@@ -91,6 +91,7 @@ edit.getInitialProps = async (ctx) => {
 
   return {
     gst_number: gst_number || null,
+    editId,
     item: JSON.stringify(item),
     groupList: JSON.stringify(groupList),
     unitList: JSON.stringify(unitList),

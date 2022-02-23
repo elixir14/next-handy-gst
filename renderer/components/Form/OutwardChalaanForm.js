@@ -71,7 +71,6 @@ const OutwardChalaanForm = ({
 }) => {
   const classes = useStyles();
   const { control, handleSubmit, setValue } = useForm();
-  const [setting, setSetting] = useState({});
   const {
     control: itemControl,
     handleSubmit: handleItemSubmit,
@@ -79,15 +78,34 @@ const OutwardChalaanForm = ({
     setValue: setItemValue,
   } = useForm();
 
+  let setting = {};
+  settingList?.map((s) => {
+    setting[s.key] = s;
+  });
+
   useEffect(() => {
-    let config = {};
-    if (settingList?.length) {
-      settingList?.map((s) => {
-        config[s.key] = s;
+    setValue(
+      "number",
+      outward_chalaan?.number
+        ? outward_chalaan?.number
+        : `${setting?.prefix?.value ?? ""}${
+            setting?.outward_challan_next_number?.value
+          }${setting?.suffix?.value ?? ""}`,
+      {
+        shouldValidate: true,
+      }
+    );
+  }, [setting]);
+
+  useEffect(() => {
+    if (outward_chalaan) {
+      Object.keys(outward_chalaan).map((key) => {
+        setValue(key, outward_chalaan[key], {
+          shouldValidate: true,
+        });
       });
     }
-    setSetting(config);
-  }, [settingList]);
+  }, [outward_chalaan]);
 
   const isEdit = !!outward_chalaan;
 
@@ -182,13 +200,8 @@ const OutwardChalaanForm = ({
                     outward_chalaan?.number
                       ? outward_chalaan?.number
                       : `${setting?.prefix?.value ?? ""}${
-                          setting?.outward_challan_next_number?.value > 4
-                            ? String("0000" + (parseInt(ele.value) + 1)).slice(
-                                -4
-                              )
-                            : "0001"
-                        }
-                        ${setting?.suffix?.value ?? ""}`
+                          setting?.outward_challan_next_number?.value
+                        }${setting?.suffix?.value ?? ""}`
                   }
                   control={control}
                   formControlProps={{

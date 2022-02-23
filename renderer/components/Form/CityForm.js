@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -54,9 +54,19 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 const CityForm = ({ city, handleFormSave, stateList }) => {
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     defaultValues: {},
   });
+
+  useEffect(() => {
+    if (city) {
+      Object.keys(city).map((key) => {
+        setValue(key, city[key], {
+          shouldValidate: true,
+        });
+      });
+    }
+  }, [city]);
 
   const isEdit = !!city;
 
